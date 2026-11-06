@@ -82,7 +82,11 @@ def load_bundle(client: FhirClient, path: Path) -> int:
 def resource_counts(client: FhirClient) -> dict[str, int]:
     counts = {}
     for resource_type in COUNTED_TYPES:
-        response = client.http.get(resource_type, params={"_summary": "count"})
+        response = client.http.get(
+            resource_type,
+            params={"_summary": "count"},
+            headers={"Cache-Control": "no-cache"},
+        )
         response.raise_for_status()
         counts[resource_type] = response.json()["total"]
     return counts

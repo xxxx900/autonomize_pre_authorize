@@ -1,0 +1,28 @@
+services:
+  hapi:
+    image: hapiproject/hapi:v8.12.0-2
+    ports:
+      - "${HAPI_HOST_PORT:-8080}:8080"
+    environment:
+      JAVA_TOOL_OPTIONS: ${HAPI_JAVA_OPTS:--Xms512m -Xmx2g}
+    restart: unless-stopped
+
+  loader:
+    build:
+      context: .
+      target: runtime
+    command: ["python", "-m", "scripts.load_fhir"]
+    environment:
+      FHIR_BASE_URL: http://hapi:8080/fhir
+      FHIR_AUTH_MODE: none
+    depends_on:
+      - hapi
+
+  test:
+    profiles: ["test"]
+    build:
+      context: .
+      target: test
+    environment:
+      NURSE_TOKEN: test-nurse-token
+      ADMIN_TOKEN: test-admin-token
