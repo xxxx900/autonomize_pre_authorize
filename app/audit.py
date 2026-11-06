@@ -16,6 +16,7 @@ class AuditAction(StrEnum):
     EVIDENCE_READ = "evidence.read"
     POLICY_READ = "policy.read"
     AUDIT_READ = "audit.read"
+    MCP_REQUEST = "mcp.request"
 
 
 class Outcome(StrEnum):

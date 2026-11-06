@@ -50,11 +50,17 @@ def test_calls_are_audited_as_mcp_agent(settings):
     ]
 
 
-def test_gate_refuses_without_the_token():
+def test_gate_refuses_and_audits_requests_without_the_token(tmp_path):
     async def inner(scope, receive, send):
         await PlainTextResponse("in")(scope, receive, send)
 
-    gated = TestClient(BearerGate(inner, "secret"))
+    audit = AuditLog(tmp_path / "audit.db")
+    gated = TestClient(BearerGate(inner, "secret", audit))
     assert gated.get("/").status_code == 401
     assert gated.get("/", headers=bearer("wrong")).status_code == 401
     assert gated.get("/", headers=bearer("secret")).text == "in"
+    assert [(e.actor, e.role, e.action.value, e.outcome.value) for e in audit.events()] == [
+        ("anonymous", None, "mcp.request", "unauthenticated"),
+        ("unknown", None, "mcp.request", "unauthenticated"),
+    ]
+    assert audit.verify().valid

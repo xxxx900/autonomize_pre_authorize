@@ -7,7 +7,8 @@ from mcp.server.fastmcp import FastMCP
 from starlette.responses import PlainTextResponse
 from starlette.types import ASGIApp, Receive, Scope, Send
 
-from app.audit import AuditAction, Outcome
+from app.audit import AuditAction, AuditLog, Outcome
+from app.auth import ANONYMOUS_ACTOR, UNKNOWN_ACTOR, bearer_token
 from app.config import Settings
 from app.fhir_client import FhirClient
 from app.main import create_app
@@ -19,19 +20,30 @@ ACTOR = "mcp-agent"
 
 
 class BearerGate:
-    """Refuses every HTTP request that lacks the shared MCP token. Lifespan passes through."""
+    """Refuses and audits every HTTP request that lacks the shared MCP token.
 
-    def __init__(self, app: ASGIApp, token: str) -> None:
+    The gate answers before reading the JSON-RPC body, so it cannot know which tool was asked
+    for; the row records the action as mcp.request rather than guessing evidence.read.
+    """
+
+    def __init__(self, app: ASGIApp, token: str, audit: AuditLog) -> None:
         self._app = app
         self._token = token.encode()
+        self._audit = audit
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] == "http":
-            headers = dict(scope["headers"])
-            scheme, _, presented = headers.get(b"authorization", b"").decode().partition(" ")
-            if scheme.lower() != "bearer" or not hmac.compare_digest(
-                presented.strip().encode(), self._token
-            ):
+            header = dict(scope["headers"]).get(b"authorization", b"").decode()
+            presented = bearer_token(header)
+            if presented is None or not hmac.compare_digest(presented.encode(), self._token):
+                self._audit.append(
+                    actor=UNKNOWN_ACTOR if presented else ANONYMOUS_ACTOR,
+                    role=None,
+                    action=AuditAction.MCP_REQUEST,
+                    request_id=uuid.uuid4().hex,
+                    resource=None,
+                    outcome=Outcome.UNAUTHENTICATED,
+                )
                 response = PlainTextResponse("missing or invalid bearer token", status_code=401)
                 await response(scope, receive, send)
                 return
@@ -89,8 +101,10 @@ def main() -> None:
     if not token:
         raise SystemExit("MCP_TOKEN must be set")
     port = int(os.environ.get("MCP_PORT", "8001"))
-    server = build_server(port=port)
-    uvicorn.run(BearerGate(server.streamable_http_app(), token), host="0.0.0.0", port=port)
+    settings = Settings()
+    server = build_server(settings, port=port)
+    gate = BearerGate(server.streamable_http_app(), token, AuditLog(settings.audit_db_path))
+    uvicorn.run(gate, host="0.0.0.0", port=port)
 
 
 if __name__ == "__main__":
