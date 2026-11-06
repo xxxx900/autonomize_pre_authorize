@@ -137,3 +137,17 @@ def test_overlapping_duplicate_prescriptions_are_not_double_counted():
         "PA-003", [{"status": "active", "authoredOn": "2026-08-27"} for _ in range(3)]
     )
     assert criterion(packet, "C3").status == NOT_MET
+
+
+def test_stopped_requests_without_end_date_do_not_contradict_the_attested_months():
+    packet = _packet_with_metformin(
+        "PA-001",
+        [
+            {"status": "stopped", "authoredOn": "2024-09-01"},
+            {"status": "stopped", "authoredOn": "2025-09-01"},
+            {"status": "active", "authoredOn": "2026-09-01"},
+        ],
+    )
+    c3 = criterion(packet, "C3")
+    assert (c3.status, c3.conflicts) == (NOT_MET, [])
+    assert "2 metformin requests have no end date" in c3.rationale

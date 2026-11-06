@@ -216,9 +216,10 @@ def c3_metformin(record: PatientRecord, form: RequestForm, policy: Policy) -> Cr
     window_start = form.request_date - timedelta(days=spec.window_days)
     therapy_days = _covered_days(spans, since=window_start)
     full_days = _covered_days(spans)
+    undated = [m for m in meds if _end_of_therapy(m, form.request_date) is None]
 
     attested_months = form.attestation.metformin_trial_months
-    if meds and attested_months is not None:
+    if meds and not undated and attested_months is not None:
         record_months = full_days / DAYS_PER_MONTH
         if attested_months > record_months + ATTESTATION_MONTH_TOLERANCE:
             return _result(
@@ -270,7 +271,12 @@ def c3_metformin(record: PatientRecord, form: RequestForm, policy: Policy) -> Cr
             "C3",
             Status.NOT_MET,
             f"{therapy_days} days of metformin therapy in the {spec.window_days} days "
-            f"before {form.request_date}; {spec.min_days_in_window} required",
+            f"before {form.request_date}; {spec.min_days_in_window} required"
+            + (
+                f"; {len(undated)} metformin requests have no end date and are not counted"
+                if undated
+                else ""
+            ),
             [m.ref for m in meds],
         )
     return _result(
