@@ -19,7 +19,7 @@ from app.packet import EvidencePacket
 from app.policy import Policy, load_policy
 from app.record import RequestForm
 from app.rules import evaluate
-from app.sources import missing_sources
+from app.safety import missing_sources
 
 REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 ANY_ROLE = (Role.NURSE, Role.ADMIN)
