@@ -106,6 +106,7 @@ def markdown(report: dict) -> str:
 def main() -> None:
     url = os.environ["OLLAMA_URL"]
     runs = int(os.environ.get("MEASURE_RUNS", "5"))
+    stem = os.environ.get("MEASURE_OUTPUT", "models")
     models = os.environ["MEASURE_MODELS"].split()
     items = packets()
     report = {"prompt_version": PROMPT_VERSION, "runs": runs, "models": []}
@@ -114,9 +115,9 @@ def main() -> None:
         result["digest"] = digest(url, model)
         report["models"].append(result)
         print(markdown({**report, "models": [result]}).splitlines()[-1], flush=True)
-    RESULTS.mkdir(exist_ok=True)
-    (RESULTS / "models.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    (RESULTS / "models.md").write_text(markdown(report), encoding="utf-8")
+        RESULTS.mkdir(exist_ok=True)
+        (RESULTS / f"{stem}.json").write_text(json.dumps(report, indent=2) + "\n", "utf-8")
+        (RESULTS / f"{stem}.md").write_text(markdown(report), encoding="utf-8")
 
 
 if __name__ == "__main__":

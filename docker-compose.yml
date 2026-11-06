@@ -151,6 +151,7 @@ services:
       OLLAMA_URL: http://ollama:11434
       MEASURE_MODELS: ${MEASURE_MODELS:-qwen2.5:3b-instruct-q4_K_M llama3.2:3b-instruct-q4_K_M}
       MEASURE_RUNS: ${MEASURE_RUNS:-5}
+      MEASURE_OUTPUT: ${MEASURE_OUTPUT:-models}
     volumes:
       - ./eval/results:/srv/eval/results
     depends_on:

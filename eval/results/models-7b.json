@@ -1,0 +1,1431 @@
+{
+  "prompt_version": "summary-v4",
+  "runs": 5,
+  "models": [
+    {
+      "model": "qwen2.5:7b-instruct-q4_K_M",
+      "n": 35,
+      "schema_valid_rate": 1.0,
+      "faithful_rate": 0.7142857142857143,
+      "forbidden_word_hits": 0,
+      "accepted_rate": 0.7142857142857143,
+      "median_latency_s": 6.24,
+      "failures": [
+        {
+          "request_id": "PA-001",
+          "run": 1,
+          "latency_s": 6.26721871799964,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 2,
+          "latency_s": 6.25092471500011,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 3,
+          "latency_s": 6.240076764999685,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 4,
+          "latency_s": 6.327549411000291,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 5,
+          "latency_s": 6.470030225000301,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 1,
+          "latency_s": 11.806843272999686,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 2,
+          "latency_s": 6.226475487999778,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 3,
+          "latency_s": 6.273918054000205,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 4,
+          "latency_s": 6.46413938600017,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 5,
+          "latency_s": 6.282892844000344,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        }
+      ],
+      "results": [
+        {
+          "request_id": "PA-001",
+          "run": 1,
+          "latency_s": 6.26721871799964,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 2,
+          "latency_s": 6.25092471500011,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 3,
+          "latency_s": 6.240076764999685,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 4,
+          "latency_s": 6.327549411000291,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 5,
+          "latency_s": 6.470030225000301,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "date not in packet: 2026-03-03",
+            "C2 stated as met/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criterion C2 has status not_met due to HbA1c being 8.1 % on 2026-03-03; no value within 90 days of the request date is provided."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 1,
+          "latency_s": 12.19502893599929,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C4 are met, as well as C5 with a valid age of 60 years. C2 is missing; HbA1c result dated on or after 2026-07-03 is needed."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 2,
+          "latency_s": 5.432677693999722,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C4 are met, as well as C5 with a valid age of 60. C2 is missing, needing an HbA1c result dated on or after 2026-07-03."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 3,
+          "latency_s": 5.298434666000503,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C4 are met, as well as C5 with a valid age of 60. C2 is missing, needing an HbA1c result dated on or after 2026-07-03."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 4,
+          "latency_s": 5.484046771999601,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C4 are met, as well as C5 with a valid age of 60. C2 is missing, needing an HbA1c result dated on or after 2026-07-03."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 5,
+          "latency_s": 5.398203693000141,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C4 are met, as well as C5 with a valid age of 60. C2 is missing, needing an HbA1c result dated on or after 2026-07-03."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 1,
+          "latency_s": 11.806843272999686,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 2,
+          "latency_s": 6.226475487999778,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 3,
+          "latency_s": 6.273918054000205,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 4,
+          "latency_s": 6.46413938600017,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 5,
+          "latency_s": 6.282892844000344,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "C1, C2, and C4 are met, while C3 is not_met due to insufficient metformin therapy duration, and C5 is met with the patient being 46 years old. C3 has status not_met because of missing or conflicting 90 days of metformin therapy within the last year."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 1,
+          "latency_s": 10.049922129999686,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C4, and C5 have status met. C3 has status conflicting due to a discrepancy in the number of months of metformin therapy, with the request form stating 6.0 months while the record shows 0.7 months."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 2,
+          "latency_s": 5.310434598999564,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C4, and C5 have status met. C3 has status conflicting due to a discrepancy in the number of months of metformin therapy, with the request form stating 6.0 months while the record shows 0.7 months."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 3,
+          "latency_s": 5.175959860000148,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C4, and C5 have status met. C3 has status conflicting due to a discrepancy in the number of months of metformin therapy, with the request form stating 6.0 months while the record shows 0.7 months."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 4,
+          "latency_s": 5.146340283000427,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C4, and C5 have status met. C3 has status conflicting due to a discrepancy in the number of months of metformin therapy, with the request form stating 6.0 months while the record shows 0.7 months."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 5,
+          "latency_s": 5.146135379000043,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C4, and C5 have status met. C3 has status conflicting due to a discrepancy in the number of months of metformin therapy, with the request form stating 6.0 months while the record shows 0.7 months."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 1,
+          "latency_s": 9.618469293999624,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C5 have status met. C4 has status not_met due to a history of pancreatitis, and C2 has status met but with an HbA1c value that is higher than the threshold."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 2,
+          "latency_s": 4.947621692999746,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C5 have status met. C4 has status not_met due to a history of pancreatitis, and C2 has status met but with an HbA1c value that is higher than the threshold."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 3,
+          "latency_s": 4.783063185999708,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C5 have status met. C4 has status not_met due to a history of pancreatitis, and C2 has status met but with an HbA1c value that is higher than the threshold."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 4,
+          "latency_s": 4.766262216000541,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C5 have status met. C4 has status not_met due to a history of pancreatitis, and C2 has status met but with an HbA1c value that is higher than the threshold."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 5,
+          "latency_s": 4.811508791000051,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, and C5 have status met. C4 has status not_met due to a history of pancreatitis, and C2 has status met but with an HbA1c value that is higher than the threshold."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 1,
+          "latency_s": 10.31776289499976,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, C4, and C5 have status met. C2 has status conflicting due to hba1c_value discrepancy."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 2,
+          "latency_s": 3.201990044000013,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, C4, and C5 have status met. C2 has status conflicting due to hba1c_value discrepancy."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 3,
+          "latency_s": 3.293048491999798,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, C4, and C5 have status met. C2 has status conflicting due to hba1c_value discrepancy."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 4,
+          "latency_s": 3.451862732000336,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, C4, and C5 have status met. C2 has status conflicting due to hba1c_value discrepancy."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 5,
+          "latency_s": 3.2773612050004886,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C1, C3, C4, and C5 have status met. C2 has status conflicting due to hba1c_value discrepancy."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 1,
+          "latency_s": 11.71632214500005,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C2 and C3 are met, showing an HbA1c of 8.4% within the required timeframe and 365 days of metformin therapy respectively. C1 is not_met due to the absence of active Type 2 diabetes mellitus documentation."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 2,
+          "latency_s": 6.648190531999717,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C2 and C3 are met, showing an HbA1c of 8.4% within the required timeframe and 365 days of metformin therapy respectively. C1 is not_met due to a lack of active Type 2 diabetes mellitus documentation, and there are no outstanding documents for C4 or C5."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 3,
+          "latency_s": 6.5981431360005445,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C2 and C3 are met, showing an HbA1c of 8.4% within the required timeframe and 365 days of metformin therapy respectively. C1 is not_met due to a lack of active Type 2 diabetes mellitus documentation, and there are no outstanding documents for C4 or C5."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 4,
+          "latency_s": 6.544742197999767,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C2 and C3 are met, showing an HbA1c of 8.4% within the required timeframe and 365 days of metformin therapy respectively. C1 is not_met due to a lack of active Type 2 diabetes mellitus documentation, and there are no outstanding documents for C4 or C5."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 5,
+          "latency_s": 6.5528021339996485,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "C2 and C3 are met, showing an HbA1c of 8.4% within the required timeframe and 365 days of metformin therapy respectively. C1 is not_met due to a lack of active Type 2 diabetes mellitus documentation, and there are no outstanding documents for C4 or C5."
+        }
+      ],
+      "digest": "845dbda0ea48"
+    },
+    {
+      "model": "llama3.2:3b-instruct-q4_K_M",
+      "n": 35,
+      "schema_valid_rate": 1.0,
+      "faithful_rate": 0.14285714285714285,
+      "forbidden_word_hits": 0,
+      "accepted_rate": 0.14285714285714285,
+      "median_latency_s": 2.1,
+      "failures": [
+        {
+          "request_id": "PA-001",
+          "run": 1,
+          "latency_s": 2.070087394999973,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 2,
+          "latency_s": 2.085544065999784,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 3,
+          "latency_s": 2.095103396000013,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 4,
+          "latency_s": 2.047469195999838,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 5,
+          "latency_s": 2.0628181560005032,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 1,
+          "latency_s": 4.306704611999521,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 2,
+          "latency_s": 2.0956409579994215,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 3,
+          "latency_s": 2.1274177909999707,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 4,
+          "latency_s": 2.1141603440000836,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 5,
+          "latency_s": 2.1234813629998825,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 1,
+          "latency_s": 4.988809223000317,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as not_met but packet says met",
+            "C3 stated as conflicting/missing but packet says conflicting",
+            "C5 stated as conflicting/missing/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C2 (not_met, HbA1c result dated outside of 90 days), C3 (missing or conflicting, metformin therapy duration), and C5 have status not_met or missing or conflicting."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 2,
+          "latency_s": 3.6836584919992674,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as not_met but packet says met",
+            "C3 stated as conflicting/not_met but packet says conflicting",
+            "C5 stated as not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C2 (HbA1c >= 7.0 %), C3 (metformin therapy), and C5 (age) do not meet their respective requirements, with C3 having conflicting values for metformin_trial_months; the outstanding document is the request form attesting 6 months of metformin."
+        }
+      ],
+      "results": [
+        {
+          "request_id": "PA-001",
+          "run": 1,
+          "latency_s": 2.070087394999973,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 2,
+          "latency_s": 2.085544065999784,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 3,
+          "latency_s": 2.095103396000013,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 4,
+          "latency_s": 2.047469195999838,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-001",
+          "run": 5,
+          "latency_s": 2.0628181560005032,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, C3, C4, and C5 have status met. Criteria C2 has missing or conflicting value for the result date of HbA1c."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 1,
+          "latency_s": 4.250566639999306,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 is missing, C5 has status met."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 2,
+          "latency_s": 1.5408366359997672,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 is missing, C5 has status met."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 3,
+          "latency_s": 1.535796670000309,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 is missing, C5 has status met."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 4,
+          "latency_s": 1.5311884709999504,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 is missing, C5 has status met."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 5,
+          "latency_s": 1.506593490999876,
+          "schema_valid": true,
+          "faithfulness_problems": [],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 is missing, C5 has status met."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 1,
+          "latency_s": 4.306704611999521,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 2,
+          "latency_s": 2.0956409579994215,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 3,
+          "latency_s": 2.1274177909999707,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 4,
+          "latency_s": 2.1141603440000836,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 5,
+          "latency_s": 2.1234813629998825,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C3 stated as conflicting/missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C3 (90 days of metformin therapy) is not_met, missing or conflicting, and document 'Medication History' is outstanding."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 1,
+          "latency_s": 4.988809223000317,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as not_met but packet says met",
+            "C3 stated as conflicting/missing but packet says conflicting",
+            "C5 stated as conflicting/missing/not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C2 (not_met, HbA1c result dated outside of 90 days), C3 (missing or conflicting, metformin therapy duration), and C5 have status not_met or missing or conflicting."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 2,
+          "latency_s": 3.6836584919992674,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as not_met but packet says met",
+            "C3 stated as conflicting/not_met but packet says conflicting",
+            "C5 stated as not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C2 (HbA1c >= 7.0 %), C3 (metformin therapy), and C5 (age) do not meet their respective requirements, with C3 having conflicting values for metformin_trial_months; the outstanding document is the request form attesting 6 months of metformin."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 3,
+          "latency_s": 3.649963638999907,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as not_met but packet says met",
+            "C3 stated as conflicting/not_met but packet says conflicting",
+            "C5 stated as not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C2 (HbA1c >= 7.0 %), C3 (metformin therapy), and C5 (age) do not meet their respective requirements, with C3 having conflicting values for metformin_trial_months; the outstanding document is the request form attesting 6 months of metformin."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 4,
+          "latency_s": 3.662719038999967,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as not_met but packet says met",
+            "C3 stated as conflicting/not_met but packet says conflicting",
+            "C5 stated as not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C2 (HbA1c >= 7.0 %), C3 (metformin therapy), and C5 (age) do not meet their respective requirements, with C3 having conflicting values for metformin_trial_months; the outstanding document is the request form attesting 6 months of metformin."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 5,
+          "latency_s": 3.6241116849996615,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as not_met but packet says met",
+            "C3 stated as conflicting/not_met but packet says conflicting",
+            "C5 stated as not_met but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C4 have status met. Criteria C2 (HbA1c >= 7.0 %), C3 (metformin therapy), and C5 (age) do not meet their respective requirements, with C3 having conflicting values for metformin_trial_months; the outstanding document is the request form attesting 6 months of metformin."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 1,
+          "latency_s": 3.81518245999996,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C4 stated as missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C3 have status met. Criteria C4 has status not_met and is missing a document (status resolved) and Criteria C5 has status met."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 2,
+          "latency_s": 2.05676947900065,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C4 stated as missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C3 have status met. Criteria C4 has status not_met and is missing a document (status resolved) and Criteria C5 has status met."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 3,
+          "latency_s": 2.0195528570002352,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C4 stated as missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C3 have status met. Criteria C4 has status not_met and is missing a document (status resolved) and Criteria C5 has status met."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 4,
+          "latency_s": 2.0083555960000012,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C4 stated as missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C3 have status met. Criteria C4 has status not_met and is missing a document (status resolved) and Criteria C5 has status met."
+        },
+        {
+          "request_id": "PA-005",
+          "run": 5,
+          "latency_s": 2.0162546600004134,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C4 stated as missing/not_met but packet says not_met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C3 have status met. Criteria C4 has status not_met and is missing a document (status resolved) and Criteria C5 has status met."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 1,
+          "latency_s": 4.556471679999959,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/not_met but packet says conflicting"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 has status not_met due to hba1c_value conflict with record, and C5 has status met."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 2,
+          "latency_s": 2.022017553000296,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/not_met but packet says conflicting"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 has status not_met due to hba1c_value conflict with record, C5 has status met."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 3,
+          "latency_s": 2.0137611899999683,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/not_met but packet says conflicting"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 has status not_met due to hba1c_value conflict with record, C5 has status met."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 4,
+          "latency_s": 2.010176097999647,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/not_met but packet says conflicting"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 has status not_met due to hba1c_value conflict with record, C5 has status met."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 5,
+          "latency_s": 2.0278696389996185,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C2 stated as conflicting/not_met but packet says conflicting"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C4 have status met. Criteria C2 has status not_met due to hba1c_value conflict with record, C5 has status met."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 1,
+          "latency_s": 8.68513780900048,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C1 stated as met/not_met but packet says not_met",
+            "C5 stated as met/not_met but packet says met",
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, C4, and C5 have status met. Criteria C1 (not_met), C2 (missing or conflicting), and C5 (status not_met) do not meet their respective requirements; C2 requires a result dated within 90 days of the request date, but the latest HbA1c is on 2026-09-20, which is outside the 90-day window; C3 meets the requirement for metformin therapy, but it does not fall within the 12 months before the request date; C5's age meets the requirement, but the request date is after the patient's birthday."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 2,
+          "latency_s": 5.87555798700032,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C1 stated as met/not_met but packet says not_met",
+            "C5 stated as met/not_met but packet says met",
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, C4, and C5 have status met. Criteria C1 (not_met), C2 (missing or conflicting), and C5 (status not_met) do not meet their respective requirements; C2 requires a result dated within 90 days of the request date, but the latest HbA1c is on 2026-09-20, which is outside the required timeframe; C3 meets the requirement for metformin therapy, but it does not fall within the 12 months before the request date; C5's age meets the minimum requirement, but the patient is actually older than that."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 3,
+          "latency_s": 5.8491872200002035,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C1 stated as met/not_met but packet says not_met",
+            "C5 stated as met/not_met but packet says met",
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, C4, and C5 have status met. Criteria C1 (not_met), C2 (missing or conflicting), and C5 (status not_met) do not meet their respective requirements; C2 requires a result dated within 90 days of the request date, but the latest HbA1c is on 2026-09-20, which is outside the required timeframe; C3 meets the requirement for metformin therapy, but it does not fall within the 12 months before the request date; C5's age meets the minimum requirement, but the patient is actually older than that."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 4,
+          "latency_s": 5.841977466000571,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C1 stated as met/not_met but packet says not_met",
+            "C5 stated as met/not_met but packet says met",
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, C4, and C5 have status met. Criteria C1 (not_met), C2 (missing or conflicting), and C5 (status not_met) do not meet their respective requirements; C2 requires a result dated within 90 days of the request date, but the latest HbA1c is on 2026-09-20, which is outside the required timeframe; C3 meets the requirement for metformin therapy, but it does not fall within the 12 months before the request date; C5's age meets the minimum requirement, but the patient is actually older than that."
+        },
+        {
+          "request_id": "PA-007",
+          "run": 5,
+          "latency_s": 5.866745528999672,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C1 stated as met/not_met but packet says not_met",
+            "C5 stated as met/not_met but packet says met",
+            "C2 stated as conflicting/met/missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, C4, and C5 have status met. Criteria C1 (not_met), C2 (missing or conflicting), and C5 (status not_met) do not meet their respective requirements; C2 requires a result dated within 90 days of the request date, but the latest HbA1c is on 2026-09-20, which is outside the required timeframe; C3 meets the requirement for metformin therapy, but it does not fall within the 12 months before the request date; C5's age meets the minimum requirement, but the patient is actually older than that."
+        }
+      ],
+      "digest": "a80c4f17acd5"
+    },
+    {
+      "model": "qwen2.5:3b-instruct-q4_K_M",
+      "n": 35,
+      "schema_valid_rate": 0.2857142857142857,
+      "faithful_rate": 0.0,
+      "forbidden_word_hits": 0,
+      "accepted_rate": 0.0,
+      "median_latency_s": 2.6,
+      "failures": [
+        {
+          "request_id": "PA-001",
+          "run": 1,
+          "latency_s": 3.299509097999362,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-001",
+          "run": 2,
+          "latency_s": 3.243429008000021,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-001",
+          "run": 3,
+          "latency_s": 3.2386502529998324,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-001",
+          "run": 4,
+          "latency_s": 3.315165674999662,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-001",
+          "run": 5,
+          "latency_s": 3.2194451109999136,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-002",
+          "run": 1,
+          "latency_s": 5.711557876999905,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C4 stated as missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C5 are met. C2 needs a HbA1c result dated on or after 2026-07-03, and C4 is missing the history of pancreatitis, medullary thyroid carcinoma, or MEN2."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 2,
+          "latency_s": 2.3390920940000797,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1 and C3 are met.\",\n\"C2 is missing, requiring an HbA1c result dated on or after 2026-07-03 from the provider. C4 has no outstanding documents.\"\n] }"
+        },
+        {
+          "request_id": "PA-002",
+          "run": 3,
+          "latency_s": 2.3618966939993697,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1 and C3 are met.\",\n\"C2 is missing, requiring an HbA1c result dated on or after 2026-07-03 from the provider. C4 has no outstanding documents.\"\n] }"
+        },
+        {
+          "request_id": "PA-002",
+          "run": 4,
+          "latency_s": 2.3480704379999224,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1 and C3 are met.\",\n\"C2 is missing, requiring an HbA1c result dated on or after 2026-07-03 from the provider. C4 has no outstanding documents.\"\n] }"
+        },
+        {
+          "request_id": "PA-002",
+          "run": 5,
+          "latency_s": 2.3810582609994526,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1 and C3 are met.\",\n\"C2 is missing, requiring an HbA1c result dated on or after 2026-07-03 from the provider. C4 has no outstanding documents.\"\n] }"
+        },
+        {
+          "request_id": "PA-003",
+          "run": 1,
+          "latency_s": 4.6121551490005,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C4 stated as missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C2 are met. C3 is not_met due to insufficient metformin therapy, and C4 is missing a documented intolerance or contraindication to metformin."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 2,
+          "latency_s": 2.2879524559994024,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C5 stated as missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C4 are met. C3 is not_met due to insufficient metformin therapy (only 35 days), and C5 is missing the document or value for age."
+        }
+      ],
+      "results": [
+        {
+          "request_id": "PA-001",
+          "run": 1,
+          "latency_s": 3.299509097999362,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-001",
+          "run": 2,
+          "latency_s": 3.243429008000021,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-001",
+          "run": 3,
+          "latency_s": 3.2386502529998324,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-001",
+          "run": 4,
+          "latency_s": 3.315165674999662,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-001",
+          "run": 5,
+          "latency_s": 3.2194451109999136,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C3, and C4 are met.\",\n\"C2 has a finding of missing or conflicting data, as the latest HbA1c result is older than 90 days. Document for an up-to-date HbA1c test within 90"
+        },
+        {
+          "request_id": "PA-002",
+          "run": 1,
+          "latency_s": 5.711557876999905,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C4 stated as missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C3, and C5 are met. C2 needs a HbA1c result dated on or after 2026-07-03, and C4 is missing the history of pancreatitis, medullary thyroid carcinoma, or MEN2."
+        },
+        {
+          "request_id": "PA-002",
+          "run": 2,
+          "latency_s": 2.3390920940000797,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1 and C3 are met.\",\n\"C2 is missing, requiring an HbA1c result dated on or after 2026-07-03 from the provider. C4 has no outstanding documents.\"\n] }"
+        },
+        {
+          "request_id": "PA-002",
+          "run": 3,
+          "latency_s": 2.3618966939993697,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1 and C3 are met.\",\n\"C2 is missing, requiring an HbA1c result dated on or after 2026-07-03 from the provider. C4 has no outstanding documents.\"\n] }"
+        },
+        {
+          "request_id": "PA-002",
+          "run": 4,
+          "latency_s": 2.3480704379999224,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1 and C3 are met.\",\n\"C2 is missing, requiring an HbA1c result dated on or after 2026-07-03 from the provider. C4 has no outstanding documents.\"\n] }"
+        },
+        {
+          "request_id": "PA-002",
+          "run": 5,
+          "latency_s": 2.3810582609994526,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1 and C3 are met.\",\n\"C2 is missing, requiring an HbA1c result dated on or after 2026-07-03 from the provider. C4 has no outstanding documents.\"\n] }"
+        },
+        {
+          "request_id": "PA-003",
+          "run": 1,
+          "latency_s": 4.6121551490005,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C4 stated as missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1 and C2 are met. C3 is not_met due to insufficient metformin therapy, and C4 is missing a documented intolerance or contraindication to metformin."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 2,
+          "latency_s": 2.2879524559994024,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C5 stated as missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C4 are met. C3 is not_met due to insufficient metformin therapy (only 35 days), and C5 is missing the document or value for age."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 3,
+          "latency_s": 2.206893878000301,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C5 stated as missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C4 are met. C3 is not_met due to insufficient metformin therapy (only 35 days), and C5 is missing the document or value for age."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 4,
+          "latency_s": 2.1866767269993943,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C5 stated as missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C4 are met. C3 is not_met due to insufficient metformin therapy (only 35 days), and C5 is missing the document or value for age."
+        },
+        {
+          "request_id": "PA-003",
+          "run": 5,
+          "latency_s": 2.174790445000326,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C5 stated as missing but packet says met"
+          ],
+          "forbidden": [],
+          "text": "Criteria C1, C2, and C4 are met. C3 is not_met due to insufficient metformin therapy (only 35 days), and C5 is missing the document or value for age."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 1,
+          "latency_s": 4.916782850000345,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C4 are met.\",\n\"C3 has conflicting status due to discrepancy in metformin trial months. Outstanding: Request form states 6.0 months while the record shows only 0."
+        },
+        {
+          "request_id": "PA-004",
+          "run": 2,
+          "latency_s": 2.6810739089996787,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C4 are met.\",\n\"C3 has conflicting status due to discrepancy in metformin trial months. Outstanding: Request form states 6.0 months of metformin therapy while the"
+        },
+        {
+          "request_id": "PA-004",
+          "run": 3,
+          "latency_s": 2.5956640790000165,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C4 are met.\",\n\"C3 has conflicting status due to discrepancy in metformin trial months. Outstanding: Request form states 6.0 months of metformin therapy while the"
+        },
+        {
+          "request_id": "PA-004",
+          "run": 4,
+          "latency_s": 2.5988479990000997,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C4 are met.\",\n\"C3 has conflicting status due to discrepancy in metformin trial months. Outstanding: Request form states 6.0 months of metformin therapy while the"
+        },
+        {
+          "request_id": "PA-004",
+          "run": 5,
+          "latency_s": 2.6180885110006784,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C4 are met.\",\n\"C3 has conflicting status due to discrepancy in metformin trial months. Outstanding: Request form states 6.0 months of metformin therapy while the"
+        },
+        {
+          "request_id": "PA-005",
+          "run": 1,
+          "latency_s": 4.2124958049998895,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C3 are met.\",\n\"C4 has a missing history of pancreatitis or is conflicting with the presence of a resolved history of pancreatitis. Document 'C4' is outstanding.\""
+        },
+        {
+          "request_id": "PA-005",
+          "run": 2,
+          "latency_s": 2.0942430590002914,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C3 are met.\",\n\"C4 has a missing history of pancreatitis or is conflicting with the presence of a resolved history of pancreatitis. Document C5 is outstanding.\"\n]"
+        },
+        {
+          "request_id": "PA-005",
+          "run": 3,
+          "latency_s": 2.085559950000061,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C3 are met.\",\n\"C4 has a missing history of pancreatitis or is conflicting with the presence of a resolved history of pancreatitis. Document C5 is outstanding.\"\n]"
+        },
+        {
+          "request_id": "PA-005",
+          "run": 4,
+          "latency_s": 2.103720265999982,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C3 are met.\",\n\"C4 has a missing history of pancreatitis or is conflicting with the presence of a resolved history of pancreatitis. Document C5 is outstanding.\"\n]"
+        },
+        {
+          "request_id": "PA-005",
+          "run": 5,
+          "latency_s": 2.0813338549996843,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C1, C2, and C3 are met.\",\n\"C4 has a missing history of pancreatitis or is conflicting with the presence of a resolved history of pancreatitis. Document C5 is outstanding.\"\n]"
+        },
+        {
+          "request_id": "PA-006",
+          "run": 1,
+          "latency_s": 5.179788585000097,
+          "schema_valid": false,
+          "raw": "{ \"sentences\": [ \"Criteria C1, C3, and C4 are met.\", \"Criteria C2 has conflicting findings regarding HbA1c value. Document 'hba1c_value' is missing from the record. Criteria C5 does not have a status."
+        },
+        {
+          "request_id": "PA-006",
+          "run": 2,
+          "latency_s": 4.398822501999348,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C1 stated as conflicting/met but packet says met",
+            "C3 stated as conflicting/met but packet says met",
+            "C4 stated as conflicting/met but packet says met",
+            "C5 stated as conflicting/met but packet says met",
+            "C2 stated as conflicting/met/missing but packet says conflicting"
+          ],
+          "forbidden": [],
+          "text": "{C1, C3, C4, and C5 are met.} {C2 has conflicting HbA1c values: request form reports 7.8% but record shows 6.4%. Metformin therapy is documented for the required duration.} {C2 status is missing a specific HbA1c value; no result date provided in the record. Outstanding document or value: HbA1c result dated within 90 days of request date.}"
+        },
+        {
+          "request_id": "PA-006",
+          "run": 3,
+          "latency_s": 4.392288724000537,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C1 stated as conflicting/met but packet says met",
+            "C3 stated as conflicting/met but packet says met",
+            "C4 stated as conflicting/met but packet says met",
+            "C5 stated as conflicting/met but packet says met",
+            "C2 stated as conflicting/met/missing but packet says conflicting"
+          ],
+          "forbidden": [],
+          "text": "{C1, C3, C4, and C5 are met.} {C2 has conflicting HbA1c values: request form reports 7.8% but record shows 6.4%. Metformin therapy is documented for the required duration.} {C2 status is missing a specific HbA1c value; no result date provided in the record. Outstanding document or value: HbA1c result dated within 90 days of request date.}"
+        },
+        {
+          "request_id": "PA-006",
+          "run": 4,
+          "latency_s": 4.437688444999367,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C1 stated as conflicting/met but packet says met",
+            "C3 stated as conflicting/met but packet says met",
+            "C4 stated as conflicting/met but packet says met",
+            "C5 stated as conflicting/met but packet says met",
+            "C2 stated as conflicting/met/missing but packet says conflicting"
+          ],
+          "forbidden": [],
+          "text": "{C1, C3, C4, and C5 are met.} {C2 has conflicting HbA1c values: request form reports 7.8% but record shows 6.4%. Metformin therapy is documented for the required duration.} {C2 status is missing a specific HbA1c value; no result date provided in the record. Outstanding document or value: HbA1c result dated within 90 days of request date.}"
+        },
+        {
+          "request_id": "PA-006",
+          "run": 5,
+          "latency_s": 4.416818687000159,
+          "schema_valid": true,
+          "faithfulness_problems": [
+            "C1 stated as conflicting/met but packet says met",
+            "C3 stated as conflicting/met but packet says met",
+            "C4 stated as conflicting/met but packet says met",
+            "C5 stated as conflicting/met but packet says met",
+            "C2 stated as conflicting/met/missing but packet says conflicting"
+          ],
+          "forbidden": [],
+          "text": "{C1, C3, C4, and C5 are met.} {C2 has conflicting HbA1c values: request form reports 7.8% but record shows 6.4%. Metformin therapy is documented for the required duration.} {C2 status is missing a specific HbA1c value; no result date provided in the record. Outstanding document or value: HbA1c result dated within 90 days of request date.}"
+        },
+        {
+          "request_id": "PA-007",
+          "run": 1,
+          "latency_s": 4.9394214440008,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C2, C3, and C5 are met.\",\n\"C4 is not_met due to missing information about pancreatitis, medullary thyroid carcinoma, or MEN2 conditions. Document this in the record.\"\n]\n}"
+        },
+        {
+          "request_id": "PA-007",
+          "run": 2,
+          "latency_s": 2.428928770999846,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C2 and C3 are met.\",\n\"C4 is met, but no documentation of intolerance or contraindication to metformin was found. Metformin therapy has been documented for at least 90 days w"
+        },
+        {
+          "request_id": "PA-007",
+          "run": 3,
+          "latency_s": 2.412790682999912,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C2 and C3 are met.\",\n\"C4 is met, but no documentation of intolerance or contraindication to metformin was found. Metformin therapy has been documented for at least 90 days w"
+        },
+        {
+          "request_id": "PA-007",
+          "run": 4,
+          "latency_s": 2.397951128999921,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C2 and C3 are met.\",\n\"C4 is met, but no documentation of intolerance or contraindication to metformin was found. Metformin therapy has been documented for at least 90 days w"
+        },
+        {
+          "request_id": "PA-007",
+          "run": 5,
+          "latency_s": 2.41325898300056,
+          "schema_valid": false,
+          "raw": "{\n\"sentences\": [\n\"Criteria C2 and C3 are met.\",\n\"C4 is met, but no documentation of intolerance or contraindication to metformin was found. Metformin therapy has been documented for at least 90 days w"
+        }
+      ],
+      "digest": "357c53fb659c"
+    }
+  ]
+}
