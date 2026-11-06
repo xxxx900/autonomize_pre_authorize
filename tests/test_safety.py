@@ -1,6 +1,12 @@
 import pytest
 
-from app.safety import cited_sources, faithfulness_problems, forbidden_words, missing_sources
+from app.safety import (
+    cited_sources,
+    faithfulness_problems,
+    forbidden_words,
+    missing_sources,
+    sentence_count,
+)
 from tests.test_rules import packet_for
 
 PA002 = packet_for("PA-002")
@@ -65,3 +71,39 @@ def test_missing_sources_lists_refs_the_server_cannot_find():
     gone = sorted(cited_sources(PA006), key=str)[0]
     assert missing_sources(PA006, lambda r: r != gone) == [gone]
     assert missing_sources(PA006, lambda r: True) == []
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "C1, C3, C4 and C5 are met, while C2 is missing.",
+        "The evidence meets criteria C1 and C3, but C2 is missing.",
+        "C2 is missing; criteria C1 and C3 are met and C4 is met.",
+    ],
+)
+def test_correct_status_claims_pass(text):
+    assert faithfulness_problems(text, PA002) == []
+
+
+@pytest.mark.parametrize(
+    ("text", "problem"),
+    [
+        ("C2 is not met and C1 is met.", "C2 stated as not_met but packet says missing"),
+        ("C1 and C3 are met, but C4 is not met; C2 is missing.", "C4 stated as not_met"),
+        ("C1 is met. C2 is missing. C3 does not meet the threshold.", "C3 stated as not_met"),
+        ("Criterion C5 fails and C2 is missing.", "C5 stated as not_met"),
+    ],
+)
+def test_wrong_status_claims_are_caught(text, problem):
+    assert any(p.startswith(problem) for p in faithfulness_problems(text, PA002))
+
+
+def test_metformin_is_not_read_as_met():
+    text = "C2 is missing, and metformin therapy is documented for C3."
+    assert not [p for p in faithfulness_problems(text, PA002) if "stated as" in p]
+
+
+def test_sentence_count():
+    assert sentence_count("One sentence with 7.0% inside.") == 1
+    assert sentence_count("First. Second.") == 2
+    assert sentence_count("No terminator") == 1

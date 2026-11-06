@@ -1,21 +1,22 @@
 import logging
 
 import httpx
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from app.packet import EvidencePacket, Status, SummarySource
-from app.safety import evidence_text, faithfulness_problems, forbidden_words
+from app.safety import evidence_text, faithfulness_problems, forbidden_words, sentence_count
 
-PROMPT_VERSION = "summary-v1"
+PROMPT_VERSION = "summary-v2"
 
 SYSTEM_RULE = (
     "You write a two-sentence factual summary of a prior-authorization evidence packet for a "
     "nurse. Use only the facts between the <evidence> tags. Describe what the evidence shows: "
     "which criteria are met and which are not met, missing or conflicting, and what documents "
-    "are outstanding. Name every criterion that is not met by its id, such as C2. Never "
-    "recommend, approve, deny, or say whether the request should or should not proceed. Never "
-    "state a number or date that is not in the evidence. Reply as JSON with a sentences array "
-    "holding exactly two strings."
+    "are outstanding. Name every criterion that is not met by its id, such as C2, and use the "
+    "status exactly as given in the evidence; never describe a met criterion as unmet. Each of "
+    "the two strings must be exactly one sentence. Never recommend, approve, deny, or say "
+    "whether the request should or should not proceed. Never state a number or date that is "
+    "not in the evidence. Reply as JSON with a sentences array holding exactly two strings."
 )
 
 logger = logging.getLogger("pa.summary")
@@ -25,6 +26,13 @@ class SummaryOutput(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     sentences: list[str] = Field(min_length=2, max_length=2)
+
+    @field_validator("sentences")
+    @classmethod
+    def _one_sentence_each(cls, value: list[str]) -> list[str]:
+        if any(not s.strip() or sentence_count(s) > 1 for s in value):
+            raise ValueError("each entry must be one non-empty sentence")
+        return value
 
     @property
     def text(self) -> str:
