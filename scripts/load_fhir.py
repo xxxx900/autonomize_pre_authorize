@@ -70,7 +70,7 @@ def wait_for_fhir(client: FhirClient, seconds: float = WAIT_SECONDS) -> None:
 
 
 def bundle_paths(resources_dir: Path) -> list[Path]:
-    """Synthea shared bundles first: patient bundles resolve Practitioner?identifier= against them."""
+    """Synthea shared bundles first: patient bundles resolve Practitioner?identifier= on them."""
     paths = sorted(p for d in BUNDLE_DIRS for p in (resources_dir / d).glob("*.json"))
     return sorted(paths, key=lambda p: not p.name.startswith(SHARED_BUNDLE_PREFIXES))
 
