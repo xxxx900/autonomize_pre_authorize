@@ -43,7 +43,7 @@ CLAUSE_SPLIT = re.compile(
 SENTENCE_END = re.compile(r"[.!?](?=\s|$)")
 STATUS_WORDS: tuple[tuple[re.Pattern[str], Status], ...] = (
     (
-        re.compile(r"\b(?:not\s+met|unmet|(?:does|do|did)\s+not\s+meet|fails?|failed)\b", re.I),
+        re.compile(r"\b(?:not[\s_]+met|unmet|(?:does|do|did)\s+not\s+meet|fails?|failed)\b", re.I),
         Status.NOT_MET,
     ),
     (re.compile(r"\b(?:met|meets?|meeting|satisf\w+)\b", re.I), Status.MET),

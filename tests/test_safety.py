@@ -92,6 +92,7 @@ def test_correct_status_claims_pass(text):
         ("C1 and C3 are met, but C4 is not met; C2 is missing.", "C4 stated as not_met"),
         ("C1 is met. C2 is missing. C3 does not meet the threshold.", "C3 stated as not_met"),
         ("Criterion C5 fails and C2 is missing.", "C5 stated as not_met"),
+        ("C2 has status not_met due to a conflict.", "C2 stated as not_met"),
     ],
 )
 def test_wrong_status_claims_are_caught(text, problem):
