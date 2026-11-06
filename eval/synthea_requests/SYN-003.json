@@ -1,0 +1,28 @@
+{
+  "request_id": "SYN-003",
+  "request_date": "2021-11-19",
+  "urgency": "standard",
+  "payer": "Payer A (synthetic)",
+  "policy_id": "MP-SYN-021",
+  "member": {
+    "patient_id": "40ef2428-c142-6e65-8e0e-0ee4098dda28",
+    "fhir_reference": "Patient/40ef2428-c142-6e65-8e0e-0ee4098dda28"
+  },
+  "requested_medication": {
+    "rxnorm": "1991302",
+    "display": "Semaglutide 0.25 MG/0.5 MG Injection, weekly"
+  },
+  "diagnosis_claimed": {
+    "snomed": "44054006",
+    "display": "Type 2 diabetes mellitus (disorder)"
+  },
+  "prescriber": {
+    "display": "Dr. Provider One (synthetic)",
+    "npi": "0000000000"
+  },
+  "prescriber_attestation": {
+    "metformin_trial_months": 12,
+    "notes": ""
+  },
+  "note": "SYNTHETIC EVALUATION REQUEST on the Synthea nov2021 sample. Request date assumed 2021-11-19, the day the sample was generated."
+}

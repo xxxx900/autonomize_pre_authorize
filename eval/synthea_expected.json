@@ -1,0 +1,75 @@
+{
+  "basis": "Hand audit of the raw Synthea bundles (eval/audit_facts.py output), written before any engine run on these requests. Request date 2021-11-19 for all ten: HbA1c window 2021-08-21 to 2021-11-19, metformin window 2020-11-19 to 2021-11-19. No bundle holds a pancreatitis, medullary thyroid carcinoma, MEN2 or type 1 diabetes Condition, and no MedicationRequest carries dispenseRequest.validityPeriod.",
+  "requests": {
+    "SYN-001": {
+      "C1": ["met", "Condition/b19cd9b8-ebdd-15f4-8361-8b3f26b6bb94 44054006 active since 2011-09-19"],
+      "C2": ["met", "Observation/37fb89db-4d0a-79a3-9999-27351cf97e41 HbA1c 7.46 on 2021-11-15; form attests the same value and date"],
+      "C3": ["missing", "No metformin MedicationRequest or AllergyIntolerance; latest eGFR 131.54 (Observation/55b9ffc0-71db-a7a6-2cde-43fa5e792ff0). Form attests 6 months, but absence of a record is missing, never conflicting"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["met", "Born 1965-02-08, age 56"]
+    },
+    "SYN-002": {
+      "C1": ["met", "Condition/d713b584-63b1-5c5e-a627-6f6ca3a33788 44054006 active"],
+      "C2": ["conflicting", "Form 8.2 on 2021-09-10; record Observation/3c6ba664-2a12-7cec-fb10-afe4e8733dfb 7.49 on that date"],
+      "C3": ["missing", "No metformin, no allergy; latest eGFR 101.21"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["met", "Born 1974-08-09, age 47"]
+    },
+    "SYN-003": {
+      "C1": ["met", "Condition/0056258b-3e2e-79ad-5c5f-a4f6f804787d 44054006 active. A Prediabetes Condition (7ecf9e6a) with onset 2021-10-21 coexists"],
+      "C2": ["not_met", "Observation/008193ee-a52f-0831-101d-a62c1c21aeea 5.79 on 2021-10-21, in window, below 7.0"],
+      "C3": ["not_met", "Only MedicationRequest/0bbac7c0-6239-4ab5-0e92-fb60f4b48efd (active, authored 2021-10-21) has a computable duration: 29 days. Four earlier metformin requests (2018-10-04 x2, 2019-10-10, 2020-10-15) are stopped with no end date, so their duration is unknown. The form's 12 months is consistent with requests dating back to 2018, so the record does not contradict it: not_met, not conflicting"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["met", "Born 1974-09-19, age 47"]
+    },
+    "SYN-004": {
+      "C1": ["met", "Condition/9af02fbb-4f7b-9786-73c8-23c5c87a386b 44054006 active"],
+      "C2": ["not_met", "Observation/ec71fe29-a9b9-28e8-b5b8-decd046790f9 4.17 on 2021-10-16; form attests the same"],
+      "C3": ["met", "No metformin record, but latest eGFR 24.35 on 2021-10-16 (Observation/3a351f84-2dd6-63ac-1d82-95cae2c43e25) is below 30: contraindication"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["met", "Born 1970-03-07, age 51"]
+    },
+    "SYN-005": {
+      "C1": ["met", "Condition/10137ab1-13bf-7820-7a84-817a85354128 44054006 active"],
+      "C2": ["not_met", "Observation/0f3d64fb-d705-b07c-e10f-10bc19437dd5 2.41 on 2021-08-31, in window"],
+      "C3": ["not_met", "MedicationRequest/2544b461-80ad-222c-fb31-b27610511605 active since 2021-08-31: 80 days, under 90. 24 earlier metformin requests since 2004 are stopped with no end date. Latest eGFR 31.81, not below 30. Form attests 2 months, which the 80 days (2.6 months) supports"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["met", "Born 1961-05-09, age 60"]
+    },
+    "SYN-006": {
+      "C1": ["met", "Condition/afb4cbee-20ba-e6af-3cc1-7ba8c19085bb 44054006 active"],
+      "C2": ["missing", "Latest HbA1c Observation/ef853916-559d-e5e7-6ebe-96d5a9a7bcb1 3.6 on 2021-08-13, eight days before the window opens; form attests the same value and date"],
+      "C3": ["missing", "No metformin, no allergy; latest eGFR 64.8"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["met", "Born 1969-01-03, age 52"]
+    },
+    "SYN-007": {
+      "C1": ["met", "Condition/cd7cf349-ad1e-6644-6951-46338f420c33 44054006 active (still active although the member died 2016-07-21)"],
+      "C2": ["missing", "Latest HbA1c 6.9 on 2016-07-20"],
+      "C3": ["missing", "No metformin, no allergy; latest eGFR 145.7"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["met", "Born 1962-04-23, age 59 on the request date by the policy's rule; Patient.deceasedDateTime is 2016-07-21 and the policy has no criterion for it"]
+    },
+    "SYN-008": {
+      "C1": ["missing", "No 44054006 Condition; only Prediabetes Condition/1f78e7d1-faa7-dcf0-8add-4671b1a0ff45. No other diabetes type is coded, so the form's T2DM claim is not contradicted"],
+      "C2": ["conflicting", "Form 7.4 on 2021-10-13; record Observation/59cb0fff-7397-5015-dcd9-937d6ffbe5b8 6.25 on that date"],
+      "C3": ["missing", "No metformin, no allergy, no eGFR"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["met", "Born 1960-08-10, age 61"]
+    },
+    "SYN-009": {
+      "C1": ["missing", "No diabetes Condition"],
+      "C2": ["missing", "No HbA1c at all; the form's 7.2 on 2021-10-01 has no record to disagree with"],
+      "C3": ["missing", "No metformin, no allergy, no eGFR"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["not_met", "Born 2005-10-23, age 16"]
+    },
+    "SYN-010": {
+      "C1": ["missing", "No diabetes Condition"],
+      "C2": ["missing", "No HbA1c"],
+      "C3": ["missing", "No metformin, no allergy, no eGFR; form attests 4 months with no record to compare"],
+      "C4": ["met", "No exclusion Condition"],
+      "C5": ["met", "Born 1978-08-13, age 43"]
+    }
+  }
+}
