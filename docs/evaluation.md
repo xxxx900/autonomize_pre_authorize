@@ -95,7 +95,7 @@ Findings are ranked by severity. Each is classified as an engine bug, an interpr
 5. **Data quirk: Synthea HbA1c values are often physiologically implausible.** SYN-005 shows 2.41% at every visit since 2012, and SYN-006 shows 3.6%. The engine reports them as recorded. They make C2 `not_met`, which is correct for the data and meaningless clinically.
 6. **Data quirk: Synthea codes conditions that contradict each other.** SYN-003's member gains a Prediabetes Condition in 2021, sixteen years after the T2DM diagnosis, and both are active. SYN-007's T2DM Condition stays active after death. The engine reads only the T2DM code and status, so neither changes a status.
 7. **Usability: every Synthea encounter note is a flagged document.** Synthea writes a `DocumentReference` with a base64 note for each encounter, so packets list 17 to 182 flagged documents. D4 requires listing them unread, but a nurse cannot review 182 documents. Filtering by document type or date window would help, and the policy does not say which documents matter.
-8. **Cosmetic: the C3 `met` rationale loses its capitals.** The engine joins the reasons and calls `str.capitalize()`, which lowercases the rest of the string, so SYN-004 reads "Latest egfr 24.35 on 2021-10-16". The value and date are right.
+8. **Cosmetic: the C3 `met` rationale loses its capitals.** The engine joins the reasons and calls `str.capitalize()`, which lowercases the rest of the string, so SYN-004 reads "Latest egfr 24.35 on 2021-10-16". The value and date are right. Fixed after merge: the first letter is uppercased instead, so it now reads "Latest eGFR".
 
 ## Summary model measurements
 

@@ -1,3 +1,5 @@
+> **Superseded.** These rates were scored before the status-claim check rejected hedged claims (merge b7ff852). Re-scoring the same stored outputs with the current check gives llama3.2:3b 14% (1 of 7, PA-002). Current numbers, including qwen2.5:7b, are in `models-7b.md` and `docs/evaluation.md`.
+
 Prompt `summary-v4`, 5 runs x 7 packets, temperature 0, CPU, one warm-up call per model not counted.
 
 | Model | Digest | Valid schema | Faithful | Forbidden hits | Accepted | Median latency |

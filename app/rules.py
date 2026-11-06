@@ -263,7 +263,8 @@ def c3_metformin(record: PatientRecord, form: RequestForm, policy: Policy) -> Cr
         reasons.append(f"latest eGFR {latest.value} on {latest.effective}")
         sources.append(latest.ref)
     if reasons:
-        return _result(policy, "C3", Status.MET, "; ".join(reasons).capitalize(), sources)
+        joined = "; ".join(reasons)
+        return _result(policy, "C3", Status.MET, joined[0].upper() + joined[1:], sources)
 
     if meds:
         return _result(
@@ -272,11 +273,7 @@ def c3_metformin(record: PatientRecord, form: RequestForm, policy: Policy) -> Cr
             Status.NOT_MET,
             f"{therapy_days} days of metformin therapy in the {spec.window_days} days "
             f"before {form.request_date}; {spec.min_days_in_window} required"
-            + (
-                f"; {len(undated)} metformin requests have no end date and are not counted"
-                if undated
-                else ""
-            ),
+            + (f"; not counted for lack of an end date: {len(undated)}" if undated else ""),
             [m.ref for m in meds],
         )
     return _result(

@@ -150,4 +150,4 @@ def test_stopped_requests_without_end_date_do_not_contradict_the_attested_months
     )
     c3 = criterion(packet, "C3")
     assert (c3.status, c3.conflicts) == (NOT_MET, [])
-    assert "2 metformin requests have no end date" in c3.rationale
+    assert "not counted for lack of an end date: 2" in c3.rationale
