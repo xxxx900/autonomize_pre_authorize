@@ -108,7 +108,12 @@ def create_app(
     def load_form(request_id: str) -> RequestForm:
         if not REQUEST_ID_PATTERN.match(request_id):
             raise FileNotFoundError(request_id)
-        raw = json.loads((settings.resources_dir / "requests" / f"{request_id}.json").read_text())
+        path = next(
+            (p for d in settings.request_dirs if (p := d / f"{request_id}.json").is_file()), None
+        )
+        if path is None:
+            raise FileNotFoundError(request_id)
+        raw = json.loads(path.read_text())
         return RequestForm.from_json(raw)
 
     def build_packet(request_id: str) -> EvidencePacket:

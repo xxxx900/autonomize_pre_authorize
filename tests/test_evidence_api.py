@@ -86,3 +86,14 @@ def test_worksheet_is_served_without_a_token_and_never_uses_innerhtml(client):
     assert response.headers["content-type"].startswith("text/html")
     assert "innerHTML" not in response.text
     assert "http://" not in response.text and "https://" not in response.text
+
+
+def test_request_form_in_the_extra_directory_is_served(settings, make_client, tmp_path):
+    form = json.loads((settings.resources_dir / "requests" / "PA-001.json").read_text("utf-8"))
+    extra = tmp_path / "extra"
+    extra.mkdir()
+    (extra / "EXTRA-001.json").write_text(json.dumps({**form, "request_id": "EXTRA-001"}))
+    settings.extra_requests_dir = extra
+    response = make_client().get("/requests/EXTRA-001/evidence", headers=bearer(NURSE))
+    assert response.status_code == 200
+    assert response.json()["request_id"] == "EXTRA-001"

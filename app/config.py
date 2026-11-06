@@ -44,6 +44,7 @@ class Settings(FhirSettings):
 
     resources_dir: Path = REPO_ROOT / "resources"
     policy_file: str = "policy_MP-SYN-021.json"
+    extra_requests_dir: Path | None = None
     audit_db_path: Path = REPO_ROOT / "audit" / "audit.db"
     log_level: str = "INFO"
     ollama_url: str | None = None
@@ -53,6 +54,11 @@ class Settings(FhirSettings):
     @property
     def policy_path(self) -> Path:
         return self.resources_dir / self.policy_file
+
+    @property
+    def request_dirs(self) -> tuple[Path, ...]:
+        primary = self.resources_dir / "requests"
+        return (primary, self.extra_requests_dir) if self.extra_requests_dir else (primary,)
 
     @model_validator(mode="after")
     def _check_tokens(self) -> "Settings":

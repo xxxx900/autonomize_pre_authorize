@@ -58,6 +58,7 @@ services:
       NURSE_TOKEN: ${NURSE_TOKEN:?set NURSE_TOKEN in .env}
       ADMIN_TOKEN: ${ADMIN_TOKEN:?set ADMIN_TOKEN in .env}
       AUDIT_DB_PATH: /data/audit.db
+      EXTRA_REQUESTS_DIR: ${EXTRA_REQUESTS_DIR:-/srv/eval/synthea_requests}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
       OLLAMA_URL: http://ollama:11434
       SUMMARY_MODEL: ${SUMMARY_MODEL:-llama3.2:3b-instruct-q4_K_M}
@@ -93,6 +94,7 @@ services:
       SUMMARY_MODEL: ${SUMMARY_MODEL:-llama3.2:3b-instruct-q4_K_M}
       SUMMARY_TIMEOUT_SECONDS: ${SUMMARY_TIMEOUT_SECONDS:-30}
       AUDIT_DB_PATH: /data/audit.db
+      EXTRA_REQUESTS_DIR: ${EXTRA_REQUESTS_DIR:-/srv/eval/synthea_requests}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
     volumes:
       - audit-data:/data
