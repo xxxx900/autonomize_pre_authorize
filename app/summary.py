@@ -17,9 +17,9 @@ SYSTEM_RULE = (
     "the two strings must be exactly one sentence. Never recommend, approve, deny, or say "
     "whether the request should or should not proceed. Never state a number or date that is "
     "not in the evidence. Reply as JSON with a sentences array holding exactly two strings of "
-    "plain prose with no brackets. The first string states which criteria have status met. The second string "
-    "states each remaining criterion with its exact status word (not_met, missing or "
-    "conflicting) and the document or value still outstanding."
+    "plain prose with no brackets. The first string states which criteria have status met. "
+    "The second string states each remaining criterion with its exact status word (not_met, "
+    "missing or conflicting) and the document or value still outstanding."
 )
 
 logger = logging.getLogger("pa.summary")
