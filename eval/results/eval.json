@@ -125,7 +125,7 @@
     {
       "request_id": "PA-001",
       "http": 200,
-      "latency_s": 5.7,
+      "latency_s": 7.49,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -163,7 +163,7 @@
     {
       "request_id": "PA-002",
       "http": 200,
-      "latency_s": 4.36,
+      "latency_s": 4.1,
       "statuses": {
         "C1": "met",
         "C2": "missing",
@@ -201,7 +201,7 @@
     {
       "request_id": "PA-003",
       "http": 200,
-      "latency_s": 4.33,
+      "latency_s": 4.41,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -239,7 +239,7 @@
     {
       "request_id": "PA-004",
       "http": 200,
-      "latency_s": 5.02,
+      "latency_s": 4.96,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -277,7 +277,7 @@
     {
       "request_id": "PA-005",
       "http": 200,
-      "latency_s": 4.08,
+      "latency_s": 3.81,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -317,7 +317,7 @@
     {
       "request_id": "PA-006",
       "http": 200,
-      "latency_s": 4.47,
+      "latency_s": 4.59,
       "statuses": {
         "C1": "met",
         "C2": "conflicting",
@@ -355,7 +355,7 @@
     {
       "request_id": "PA-007",
       "http": 200,
-      "latency_s": 8.44,
+      "latency_s": 8.66,
       "statuses": {
         "C1": "not_met",
         "C2": "met",
@@ -393,7 +393,7 @@
     {
       "request_id": "SYN-001",
       "http": 200,
-      "latency_s": 7.56,
+      "latency_s": 7.82,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -429,7 +429,7 @@
     {
       "request_id": "SYN-002",
       "http": 200,
-      "latency_s": 7.61,
+      "latency_s": 7.67,
       "statuses": {
         "C1": "met",
         "C2": "conflicting",
@@ -495,7 +495,7 @@
       "rationales": {
         "C1": "Type 2 diabetes mellitus recorded with clinical status active",
         "C2": "Latest HbA1c 5.79 % on 2021-10-21; threshold 7.0 %",
-        "C3": "29 days of metformin therapy in the 365 days before 2021-11-19; 90 required; 4 metformin requests have no end date and are not counted",
+        "C3": "29 days of metformin therapy in the 365 days before 2021-11-19; 90 required; not counted for lack of an end date: 4",
         "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
         "C5": "Age 47 on 2021-11-19; minimum 18"
       },
@@ -507,7 +507,7 @@
     {
       "request_id": "SYN-004",
       "http": 200,
-      "latency_s": 5.21,
+      "latency_s": 5.29,
       "statuses": {
         "C1": "met",
         "C2": "not_met",
@@ -533,7 +533,7 @@
       "rationales": {
         "C1": "Type 2 diabetes mellitus recorded with clinical status active",
         "C2": "Latest HbA1c 4.17 % on 2021-10-16; threshold 7.0 %",
-        "C3": "Latest egfr 24.35 on 2021-10-16",
+        "C3": "Latest eGFR 24.35 on 2021-10-16",
         "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
         "C5": "Age 51 on 2021-11-19; minimum 18"
       },
@@ -545,7 +545,7 @@
     {
       "request_id": "SYN-005",
       "http": 200,
-      "latency_s": 7.49,
+      "latency_s": 7.44,
       "statuses": {
         "C1": "met",
         "C2": "not_met",
@@ -595,7 +595,7 @@
       "rationales": {
         "C1": "Type 2 diabetes mellitus recorded with clinical status active",
         "C2": "Latest HbA1c 2.41 % on 2021-08-31; threshold 7.0 %",
-        "C3": "80 days of metformin therapy in the 365 days before 2021-11-19; 90 required; 24 metformin requests have no end date and are not counted",
+        "C3": "80 days of metformin therapy in the 365 days before 2021-11-19; 90 required; not counted for lack of an end date: 24",
         "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
         "C5": "Age 60 on 2021-11-19; minimum 18"
       },
@@ -607,7 +607,7 @@
     {
       "request_id": "SYN-006",
       "http": 200,
-      "latency_s": 7.1,
+      "latency_s": 7.19,
       "statuses": {
         "C1": "met",
         "C2": "missing",
@@ -643,7 +643,7 @@
     {
       "request_id": "SYN-007",
       "http": 200,
-      "latency_s": 7.3,
+      "latency_s": 7.32,
       "statuses": {
         "C1": "met",
         "C2": "missing",
@@ -679,7 +679,7 @@
     {
       "request_id": "SYN-008",
       "http": 200,
-      "latency_s": 7.85,
+      "latency_s": 8.08,
       "statuses": {
         "C1": "missing",
         "C2": "conflicting",
@@ -713,7 +713,7 @@
     {
       "request_id": "SYN-009",
       "http": 200,
-      "latency_s": 4.55,
+      "latency_s": 4.66,
       "statuses": {
         "C1": "missing",
         "C2": "missing",
@@ -745,7 +745,7 @@
     {
       "request_id": "SYN-010",
       "http": 200,
-      "latency_s": 4.48,
+      "latency_s": 4.6,
       "statuses": {
         "C1": "missing",
         "C2": "missing",
