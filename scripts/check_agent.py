@@ -26,7 +26,9 @@ async def main() -> int:
     for request_id in REQUEST_IDS:
         run = await run_agent(request_id, **settings_from_env())
         agent_packet = json.loads(run.packet_text)
-        endpoint = httpx.get(f"{api}/requests/{request_id}/evidence", headers=headers).json()
+        endpoint = httpx.get(
+            f"{api}/requests/{request_id}/evidence", headers=headers, timeout=120
+        ).json()
         same_view = view(agent_packet) == view(endpoint)
         identical = agent_packet == endpoint
         failures += not (same_view and identical)
