@@ -11,6 +11,7 @@ from app.fhir_client import FhirClient
 
 URN_PREFIX = "urn:uuid:"
 BUNDLE_DIRS = ("bundles", "synthea")
+SHARED_BUNDLE_PREFIXES = ("hospitalInformation", "practitionerInformation")
 WAIT_SECONDS = 600
 COUNTED_TYPES = (
     "Patient",
@@ -69,7 +70,9 @@ def wait_for_fhir(client: FhirClient, seconds: float = WAIT_SECONDS) -> None:
 
 
 def bundle_paths(resources_dir: Path) -> list[Path]:
-    return sorted(p for d in BUNDLE_DIRS for p in (resources_dir / d).glob("*.json"))
+    """Synthea shared bundles first: patient bundles resolve Practitioner?identifier= against them."""
+    paths = sorted(p for d in BUNDLE_DIRS for p in (resources_dir / d).glob("*.json"))
+    return sorted(paths, key=lambda p: not p.name.startswith(SHARED_BUNDLE_PREFIXES))
 
 
 def load_bundle(client: FhirClient, path: Path) -> int:

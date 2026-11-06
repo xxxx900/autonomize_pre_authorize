@@ -68,6 +68,27 @@ def test_rewrite_is_deterministic_and_leaves_input_untouched():
 
 
 def test_already_idempotent_bundle_is_unchanged(resources_dir):
-    for path in bundle_paths(resources_dir):
+    for path in sorted((resources_dir / "bundles").glob("*.json")):
         bundle = json.loads(path.read_text(encoding="utf-8"))
         assert to_idempotent_bundle(bundle) == bundle
+
+
+def test_synthea_shared_bundles_load_before_patient_bundles(tmp_path):
+    names = {
+        "bundles": ["PA-001.json"],
+        "synthea": [
+            "Aaron1_Smith2_uuid.json",
+            "hospitalInformation1.json",
+            "practitionerInformation1.json",
+        ],
+    }
+    for folder, files in names.items():
+        (tmp_path / folder).mkdir()
+        for name in files:
+            (tmp_path / folder / name).write_text("{}")
+    assert [p.name for p in bundle_paths(tmp_path)] == [
+        "hospitalInformation1.json",
+        "practitionerInformation1.json",
+        "PA-001.json",
+        "Aaron1_Smith2_uuid.json",
+    ]
