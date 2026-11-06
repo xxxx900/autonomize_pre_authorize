@@ -115,6 +115,15 @@ services:
     depends_on:
       - mcp
 
+  fetch-synthea:
+    profiles: ["synthea"]
+    build:
+      context: .
+      target: runtime
+    command: ["python", "-m", "scripts.fetch_synthea"]
+    volumes:
+      - ./resources/synthea:/srv/resources/synthea
+
   measure:
     profiles: ["eval"]
     build:

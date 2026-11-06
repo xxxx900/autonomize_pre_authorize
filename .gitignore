@@ -8,3 +8,4 @@ audit/*.db
 eval/results/*.tmp
 todo.md
 .audit/
+resources/synthea/
