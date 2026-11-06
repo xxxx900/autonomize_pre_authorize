@@ -77,3 +77,11 @@ def test_unlisted_log_fields_are_dropped():
         extra={"fields": {"event": "x", "hba1c": 6.4}},
     )
     assert "hba1c" not in json.loads(JsonFormatter().format(record))
+
+
+def test_worksheet_is_served_without_a_token_and_never_uses_innerhtml(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/html")
+    assert "innerHTML" not in response.text
+    assert "http://" not in response.text and "https://" not in response.text

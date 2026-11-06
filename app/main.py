@@ -4,10 +4,11 @@ import re
 import time
 import uuid
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, ConfigDict, ValidationError
 
 from app.audit import AuditAction, AuditEvent, AuditLog, ChainStatus, Outcome, verify_chain
@@ -22,6 +23,7 @@ from app.record import RequestForm
 from app.rules import evaluate
 from app.sources import missing_sources
 
+WEB_DIR = Path(__file__).parent / "web"
 REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 ANY_ROLE = (Role.NURSE, Role.ADMIN)
 
@@ -164,6 +166,10 @@ def create_app(settings: Settings | None = None, fhir: FhirClient | None = None)
         report = AuditReport(chain=verify_chain(events), events=events)
         audit_call(principal, request, AuditAction.AUDIT_READ, None, Outcome.OK)
         return report
+
+    @app.get("/", include_in_schema=False)
+    def worksheet():
+        return FileResponse(WEB_DIR / "index.html")
 
     @app.get("/health")
     def health():
