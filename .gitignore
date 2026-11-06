@@ -1,4 +1,10 @@
 __pycache__/
+*.pyc
 .venv/
+.env
 .pytest_cache/
 .ruff_cache/
+audit/*.db
+eval/results/*.tmp
+todo.md
+.audit/
