@@ -104,7 +104,7 @@ def settings_from_env() -> dict[str, str]:
         "mcp_url": os.environ.get("MCP_URL", "http://localhost:8001/mcp"),
         "mcp_token": os.environ["MCP_TOKEN"],
         "ollama_url": os.environ.get("OLLAMA_URL", "http://localhost:11434"),
-        "model": os.environ.get("AGENT_MODEL", "qwen2.5:3b"),
+        "model": os.environ.get("AGENT_MODEL", "qwen2.5:3b-instruct-q4_K_M"),
     }
 
 

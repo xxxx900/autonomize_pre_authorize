@@ -21,7 +21,8 @@ from app.pipeline import PipelineError
 from app.policy import Policy, load_policy
 from app.record import RequestForm
 from app.rules import evaluate
-from app.sources import missing_sources
+from app.safety import missing_sources
+from app.summary import Summarizer
 
 WEB_DIR = Path(__file__).parent / "web"
 REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
@@ -41,22 +42,26 @@ class AuditReport(BaseModel):
     events: list[AuditEvent]
 
 
-def attach_summary(packet: EvidencePacket) -> EvidencePacket:
-    return packet
-
-
-def create_app(settings: Settings | None = None, fhir: FhirClient | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None,
+    fhir: FhirClient | None = None,
+    summarizer: Summarizer | None = None,
+) -> FastAPI:
     settings = settings or Settings()
     configure_logging(settings.log_level)
     policy = load_policy(settings.policy_path)
     owned_fhir = fhir is None
     fhir = fhir or FhirClient(settings)
+    summarizer = summarizer or Summarizer(
+        settings.ollama_url, settings.summary_model, settings.summary_timeout_seconds
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
         yield
         if owned_fhir:
             fhir.close()
+        summarizer.close()
 
     app = FastAPI(title="PA Evidence Packet", lifespan=lifespan)
     app.state.audit = AuditLog(settings.audit_db_path)
@@ -122,7 +127,7 @@ def create_app(settings: Settings | None = None, fhir: FhirClient | None = None)
             )
         try:
             patient = fhir.patient_record(form.patient_id)
-            packet = attach_summary(evaluate(patient, form, policy))
+            packet = evaluate(patient, form, policy)
             unverified = missing_sources(packet, fhir.exists)
         except PatientNotFound as exc:
             raise PipelineError(Outcome.NOT_FOUND, 404, "member not found in FHIR") from exc
@@ -130,7 +135,7 @@ def create_app(settings: Settings | None = None, fhir: FhirClient | None = None)
             raise PipelineError(Outcome.ERROR, 502, "FHIR server unavailable") from exc
         if unverified:
             raise PipelineError(Outcome.ERROR, 502, "a cited source could not be verified in FHIR")
-        return packet
+        return summarizer(packet)
 
     app.state.build_packet = build_packet
     app.state.policy = policy
