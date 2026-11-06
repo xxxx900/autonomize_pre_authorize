@@ -1,4 +1,5 @@
 import json
+import threading
 
 import httpx
 import pytest
@@ -160,3 +161,22 @@ def test_api_serves_packets_when_ollama_is_down(settings):
     response = TestClient(app).get("/requests/PA-001/evidence", headers=bearer(NURSE))
     assert response.status_code == 200
     assert response.json()["summary_source"] == "template"
+
+
+def test_startup_warms_the_model_without_waiting_for_it(settings):
+    release = threading.Event()
+    loads = []
+
+    def slow_load(request):
+        release.wait(5)
+        loads.append((request.url.path, json.loads(request.content)["model"]))
+        return httpx.Response(200, json={"done": True})
+
+    fhir = FhirClient(settings, fake_fhir_transport(bundle_resources("PA-001")))
+    with TestClient(create_app(settings, fhir, summarizer_replying(slow_load))) as client:
+        assert client.get("/health").status_code == 200
+        assert loads == []
+        release.set()
+        warm_up = next(t for t in threading.enumerate() if t.name == "summary-warm-up")
+        warm_up.join(5)
+    assert loads == [("/api/generate", "m")]

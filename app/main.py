@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+import threading
 import time
 import uuid
 from contextlib import asynccontextmanager
@@ -58,6 +59,7 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
+        threading.Thread(target=summarizer.warm_up, name="summary-warm-up", daemon=True).start()
         yield
         if owned_fhir:
             fhir.close()

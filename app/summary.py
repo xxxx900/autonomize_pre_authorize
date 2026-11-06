@@ -1,4 +1,5 @@
 import logging
+import time
 
 import httpx
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -7,6 +8,7 @@ from app.packet import EvidencePacket, Status, SummarySource
 from app.safety import evidence_text, faithfulness_problems, forbidden_words, sentence_count
 
 PROMPT_VERSION = "summary-v4"
+WARM_UP_TIMEOUT_SECONDS = 300.0
 
 SYSTEM_RULE = (
     "You write a two-sentence factual summary of a prior-authorization evidence packet for a "
@@ -116,6 +118,22 @@ class Summarizer:
         text = SummaryOutput.model_validate_json(self.ask(packet)).text
         check_output(text, packet)
         return text
+
+    def warm_up(self) -> None:
+        """Load the model into Ollama memory so the first evidence request does not pay for it."""
+        if self._client is None:
+            return
+        started = time.perf_counter()
+        try:
+            self._client.post(
+                "/api/generate",
+                json={"model": self.model, "prompt": "", "keep_alive": "30m"},
+                timeout=WARM_UP_TIMEOUT_SECONDS,
+            ).raise_for_status()
+        except httpx.HTTPError as exc:
+            logger.warning("summary model warm-up failed: %s", type(exc).__name__)
+            return
+        logger.info("summary model warm-up done in %.1f s", time.perf_counter() - started)
 
     def close(self) -> None:
         if self._client:
