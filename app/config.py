@@ -46,6 +46,9 @@ class Settings(FhirSettings):
     policy_file: str = "policy_MP-SYN-021.json"
     audit_db_path: Path = REPO_ROOT / "audit" / "audit.db"
     log_level: str = "INFO"
+    ollama_url: str | None = None
+    summary_model: str = "qwen2.5:3b-instruct-q4_K_M"
+    summary_timeout_seconds: float = 30.0
 
     @property
     def policy_path(self) -> Path:

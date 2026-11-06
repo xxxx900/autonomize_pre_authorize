@@ -20,6 +20,7 @@ from app.policy import Policy, load_policy
 from app.record import RequestForm
 from app.rules import evaluate
 from app.safety import missing_sources
+from app.summary import Summarizer
 
 REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 ANY_ROLE = (Role.NURSE, Role.ADMIN)
@@ -38,22 +39,26 @@ class AuditReport(BaseModel):
     events: list[AuditEvent]
 
 
-def attach_summary(packet: EvidencePacket) -> EvidencePacket:
-    return packet
-
-
-def create_app(settings: Settings | None = None, fhir: FhirClient | None = None) -> FastAPI:
+def create_app(
+    settings: Settings | None = None,
+    fhir: FhirClient | None = None,
+    summarizer: Summarizer | None = None,
+) -> FastAPI:
     settings = settings or Settings()
     configure_logging(settings.log_level)
     policy = load_policy(settings.policy_path)
     owned_fhir = fhir is None
     fhir = fhir or FhirClient(settings)
+    summarizer = summarizer or Summarizer(
+        settings.ollama_url, settings.summary_model, settings.summary_timeout_seconds
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
         yield
         if owned_fhir:
             fhir.close()
+        summarizer.close()
 
     app = FastAPI(title="PA Evidence Packet", lifespan=lifespan)
     app.state.audit = AuditLog(settings.audit_db_path)
@@ -126,7 +131,7 @@ def create_app(settings: Settings | None = None, fhir: FhirClient | None = None)
             raise HTTPException(422, "request references a policy this service does not hold")
         try:
             patient = fhir.patient_record(form.patient_id)
-            packet = attach_summary(evaluate(patient, form, policy))
+            packet = evaluate(patient, form, policy)
             unverified = missing_sources(packet, fhir.exists)
         except PatientNotFound as exc:
             audit_call(principal, request, AuditAction.EVIDENCE_READ, request_id, Outcome.NOT_FOUND)
@@ -137,6 +142,7 @@ def create_app(settings: Settings | None = None, fhir: FhirClient | None = None)
         if unverified:
             audit_call(principal, request, AuditAction.EVIDENCE_READ, request_id, Outcome.ERROR)
             raise HTTPException(502, "a cited source could not be verified in FHIR")
+        packet = summarizer(packet)
         audit_call(principal, request, AuditAction.EVIDENCE_READ, request_id, Outcome.OK)
         return packet
 

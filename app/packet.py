@@ -18,6 +18,11 @@ class Route(StrEnum):
     CLINICIAN_REVIEW = "clinician_review"
 
 
+class SummarySource(StrEnum):
+    MODEL = "model"
+    TEMPLATE = "template"
+
+
 class Frozen(BaseModel):
     model_config = ConfigDict(frozen=True)
 
@@ -48,6 +53,8 @@ class EvidencePacket(Frozen):
     missing_documents: list[str]
     flagged_documents: list[SourceRef]
     summary: str | None = None
+    summary_source: SummarySource | None = None
+    summary_prompt_version: str | None = None
 
     @computed_field
     @property

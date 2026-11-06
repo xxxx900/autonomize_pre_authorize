@@ -24,7 +24,8 @@ def test_route_for_each_supplied_request(client, request_id, route):
     body = response.json()
     assert body["route"] == route
     assert body["request_id"] == request_id
-    assert body["summary"] is None
+    assert body["summary_source"] == "template"
+    assert body["summary"]
 
 
 def test_unknown_or_malformed_request_id_is_404(client):
