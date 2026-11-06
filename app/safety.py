@@ -22,7 +22,10 @@ def evidence_text(packet: EvidencePacket) -> str:
     """Every fact a summary may state. The model is shown exactly this text and nothing else."""
     lines = [f"Request date: {packet.request_date}"]
     for c in packet.criteria:
-        lines.append(f"{c.id} [{c.status.value}] {c.requirement}. Finding: {c.rationale}")
+        lines.append(
+            f"{c.id} has status {c.status.value}. Requirement: {c.requirement}. "
+            f"Finding: {c.rationale}"
+        )
         if c.missing_document:
             lines.append(f"{c.id} needs from the provider: {c.missing_document}")
         lines.extend(

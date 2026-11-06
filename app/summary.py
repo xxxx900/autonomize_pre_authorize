@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from app.packet import EvidencePacket, Status, SummarySource
 from app.safety import evidence_text, faithfulness_problems, forbidden_words, sentence_count
 
-PROMPT_VERSION = "summary-v2"
+PROMPT_VERSION = "summary-v4"
 
 SYSTEM_RULE = (
     "You write a two-sentence factual summary of a prior-authorization evidence packet for a "
@@ -16,7 +16,10 @@ SYSTEM_RULE = (
     "status exactly as given in the evidence; never describe a met criterion as unmet. Each of "
     "the two strings must be exactly one sentence. Never recommend, approve, deny, or say "
     "whether the request should or should not proceed. Never state a number or date that is "
-    "not in the evidence. Reply as JSON with a sentences array holding exactly two strings."
+    "not in the evidence. Reply as JSON with a sentences array holding exactly two strings of plain prose with "
+    "no brackets. The first string states which criteria have status met. The second string "
+    "states each remaining criterion with its exact status word (not_met, missing or "
+    "conflicting) and the document or value still outstanding."
 )
 
 logger = logging.getLogger("pa.summary")
