@@ -16,6 +16,7 @@ from app.config import Settings
 from app.fhir_client import FhirClient, FhirError, PatientNotFound
 from app.logs import configure_logging, log_event
 from app.packet import EvidencePacket
+from app.pipeline import PipelineError
 from app.policy import Policy, load_policy
 from app.record import RequestForm
 from app.rules import evaluate
@@ -103,6 +104,35 @@ def create_app(settings: Settings | None = None, fhir: FhirClient | None = None)
         raw = json.loads((settings.resources_dir / "requests" / f"{request_id}.json").read_text())
         return RequestForm.from_json(raw)
 
+    def build_packet(request_id: str) -> EvidencePacket:
+        try:
+            form = load_form(request_id)
+        except (FileNotFoundError, ValidationError, KeyError, json.JSONDecodeError) as exc:
+            missing = isinstance(exc, FileNotFoundError)
+            raise PipelineError(
+                Outcome.NOT_FOUND if missing else Outcome.ERROR,
+                404 if missing else 422,
+                "unknown or unreadable request",
+            ) from exc
+        if form.policy_id != policy.policy_id:
+            raise PipelineError(
+                Outcome.ERROR, 422, "request references a policy this service does not hold"
+            )
+        try:
+            patient = fhir.patient_record(form.patient_id)
+            packet = attach_summary(evaluate(patient, form, policy))
+            unverified = missing_sources(packet, fhir.exists)
+        except PatientNotFound as exc:
+            raise PipelineError(Outcome.NOT_FOUND, 404, "member not found in FHIR") from exc
+        except FhirError as exc:
+            raise PipelineError(Outcome.ERROR, 502, "FHIR server unavailable") from exc
+        if unverified:
+            raise PipelineError(Outcome.ERROR, 502, "a cited source could not be verified in FHIR")
+        return packet
+
+    app.state.build_packet = build_packet
+    app.state.policy = policy
+
     @app.get("/requests/{request_id}/evidence", response_model=EvidencePacket)
     def evidence(
         request_id: str,
@@ -110,33 +140,10 @@ def create_app(settings: Settings | None = None, fhir: FhirClient | None = None)
         principal: EvidenceCaller,
     ):
         try:
-            form = load_form(request_id)
-        except (FileNotFoundError, ValidationError, KeyError, json.JSONDecodeError) as exc:
-            missing = isinstance(exc, FileNotFoundError)
-            audit_call(
-                principal,
-                request,
-                AuditAction.EVIDENCE_READ,
-                request_id,
-                Outcome.NOT_FOUND if missing else Outcome.ERROR,
-            )
-            raise HTTPException(404 if missing else 422, "unknown or unreadable request") from exc
-        if form.policy_id != policy.policy_id:
-            audit_call(principal, request, AuditAction.EVIDENCE_READ, request_id, Outcome.ERROR)
-            raise HTTPException(422, "request references a policy this service does not hold")
-        try:
-            patient = fhir.patient_record(form.patient_id)
-            packet = attach_summary(evaluate(patient, form, policy))
-            unverified = missing_sources(packet, fhir.exists)
-        except PatientNotFound as exc:
-            audit_call(principal, request, AuditAction.EVIDENCE_READ, request_id, Outcome.NOT_FOUND)
-            raise HTTPException(404, "member not found in FHIR") from exc
-        except FhirError as exc:
-            audit_call(principal, request, AuditAction.EVIDENCE_READ, request_id, Outcome.ERROR)
-            raise HTTPException(502, "FHIR server unavailable") from exc
-        if unverified:
-            audit_call(principal, request, AuditAction.EVIDENCE_READ, request_id, Outcome.ERROR)
-            raise HTTPException(502, "a cited source could not be verified in FHIR")
+            packet = build_packet(request_id)
+        except PipelineError as exc:
+            audit_call(principal, request, AuditAction.EVIDENCE_READ, request_id, exc.outcome)
+            raise HTTPException(exc.status_code, exc.detail) from exc
         audit_call(principal, request, AuditAction.EVIDENCE_READ, request_id, Outcome.OK)
         return packet
 
