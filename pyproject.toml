@@ -8,6 +8,7 @@ dependencies = [
     "fastapi",
     "httpx",
     "uvicorn>=0.54.0",
+    "mcp>=1.12,<2",
 ]
 
 [dependency-groups]
