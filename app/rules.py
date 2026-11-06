@@ -185,46 +185,55 @@ def _end_of_therapy(item: MedicationRequest, request_date: date) -> date | None:
     return None
 
 
-def _full_days(item: MedicationRequest, request_date: date) -> int:
+def _interval(item: MedicationRequest, request_date: date) -> tuple[date, date] | None:
     end = _end_of_therapy(item, request_date)
-    if item.authored_on is None or end is None:
-        return 0
-    return max(0, (end - item.authored_on).days)
+    if item.authored_on is None or end is None or end <= item.authored_on:
+        return None
+    return item.authored_on, min(end, request_date)
 
 
-def _days_in_window(item: MedicationRequest, request_date: date, window_days: int) -> int:
-    end = _end_of_therapy(item, request_date)
-    if item.authored_on is None or end is None:
-        return 0
-    start = max(item.authored_on, request_date - timedelta(days=window_days))
-    return max(0, (min(end, request_date) - start).days)
+def _covered_days(intervals: list[tuple[date, date]], since: date | None = None) -> int:
+    clipped = sorted(
+        (max(start, since) if since else start, end)
+        for start, end in intervals
+        if since is None or end > since
+    )
+    total = 0
+    cursor: date | None = None
+    for start, end in clipped:
+        start = max(start, cursor) if cursor else start
+        if end > start:
+            total += (end - start).days
+            cursor = end
+    return total
 
 
 def c3_metformin(record: PatientRecord, form: RequestForm, policy: Policy) -> CriterionResult:
     spec = policy.c3
     meds = [m for m in record.medication_requests if _is_metformin(m, policy)]
-    window_days = {m.ref.id: _days_in_window(m, form.request_date, spec.window_days) for m in meds}
-    full_days = {m.ref.id: _full_days(m, form.request_date) for m in meds}
-    therapy_days = sum(window_days.values())
+    intervals = {m.ref.id: _interval(m, form.request_date) for m in meds}
+    spans = [i for i in intervals.values() if i is not None]
+    window_start = form.request_date - timedelta(days=spec.window_days)
+    therapy_days = _covered_days(spans, since=window_start)
+    full_days = _covered_days(spans)
 
     attested_months = form.attestation.metformin_trial_months
     if meds and attested_months is not None:
-        longest = max(meds, key=lambda m: (full_days[m.ref.id], m.ref.id))
-        record_months = full_days[longest.ref.id] / DAYS_PER_MONTH
+        record_months = full_days / DAYS_PER_MONTH
         if attested_months > record_months + ATTESTATION_MONTH_TOLERANCE:
             return _result(
                 policy,
                 "C3",
                 Status.CONFLICTING,
                 f"Request form attests {attested_months:g} months of metformin; record supports "
-                f"{record_months:.1f} months ({full_days[longest.ref.id]} days)",
-                [longest.ref],
+                f"{record_months:.1f} months ({full_days} days)",
+                [m.ref for m in meds],
                 conflicts=[
                     AttestationComparison(
                         field="metformin_trial_months",
                         form_value=attested_months,
                         record_value=round(record_months, 1),
-                        record_source=longest.ref,
+                        record_source=meds[0].ref if len(meds) == 1 else None,
                     )
                 ],
             )
@@ -236,7 +245,9 @@ def c3_metformin(record: PatientRecord, form: RequestForm, policy: Policy) -> Cr
             f"{therapy_days} days of metformin therapy in the {spec.window_days} days "
             f"before {form.request_date}"
         )
-        sources += [m.ref for m in meds if window_days[m.ref.id] > 0]
+        sources += [
+            m.ref for m in meds if (i := intervals[m.ref.id]) is not None and i[1] > window_start
+        ]
     intolerant = [a for a in record.allergies if _has_rxnorm(a.codings, spec.ingredient_rxnorm)]
     if intolerant:
         reasons.append("metformin intolerance documented")

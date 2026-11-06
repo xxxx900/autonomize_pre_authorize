@@ -97,3 +97,43 @@ def test_pa001_attestation_compares_unclipped_duration():
     c3 = criterion(packet_for("PA-001"), "C3")
     assert c3.status == MET
     assert c3.conflicts == []
+
+
+def _packet_with_metformin(request_id: str, prescriptions: list[dict]) -> EvidencePacket:
+    bundle = json.loads((RESOURCES / "bundles" / f"{request_id}.json").read_text("utf-8"))
+    raw_form = json.loads((RESOURCES / "requests" / f"{request_id}.json").read_text("utf-8"))
+    resources = [e["resource"] for e in bundle["entry"]]
+    template = next(r for r in resources if r["resourceType"] == "MedicationRequest")
+    others = [r for r in resources if r["resourceType"] != "MedicationRequest"]
+    meds = [
+        {
+            **template,
+            "id": f"mr-{i}",
+            "status": p["status"],
+            "authoredOn": p["authoredOn"],
+            "dispenseRequest": {"validityPeriod": {"start": p["authoredOn"], "end": p["end"]}}
+            if p.get("end")
+            else {},
+        }
+        for i, p in enumerate(prescriptions)
+    ]
+    return evaluate(record_from_resources(others + meds), RequestForm.from_json(raw_form), POLICY)
+
+
+def test_back_to_back_renewals_count_as_one_continuous_trial():
+    packet = _packet_with_metformin(
+        "PA-001",
+        [
+            {"status": "completed", "authoredOn": "2025-07-15", "end": "2026-01-15"},
+            {"status": "active", "authoredOn": "2026-01-15"},
+        ],
+    )
+    c3 = criterion(packet, "C3")
+    assert (c3.status, c3.conflicts) == (MET, [])
+
+
+def test_overlapping_duplicate_prescriptions_are_not_double_counted():
+    packet = _packet_with_metformin(
+        "PA-003", [{"status": "active", "authoredOn": "2026-08-27"} for _ in range(3)]
+    )
+    assert criterion(packet, "C3").status == NOT_MET
