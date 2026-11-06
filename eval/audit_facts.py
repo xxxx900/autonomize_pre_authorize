@@ -77,7 +77,11 @@ def facts(bundle: dict) -> dict:
             if (r.get("dispenseRequest") or {}).get("validityPeriod")
         ),
         "allergies": [
-            (status(r), [c.get("code") for c in codes(r.get("code"))], f"AllergyIntolerance/{r['id']}")
+            (
+                status(r),
+                [c.get("code") for c in codes(r.get("code"))],
+                f"AllergyIntolerance/{r['id']}",
+            )
             for r in of("AllergyIntolerance")
         ],
     }

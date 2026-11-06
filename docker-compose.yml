@@ -126,6 +126,21 @@ services:
     volumes:
       - ./resources/synthea:/srv/resources/synthea
 
+  run-eval:
+    profiles: ["eval"]
+    build:
+      context: .
+      target: runtime
+    command: ["python", "-m", "eval.run_eval"]
+    environment:
+      API_URL: http://api:8000
+      NURSE_TOKEN: ${NURSE_TOKEN:?set NURSE_TOKEN in .env}
+    volumes:
+      - ./eval/results:/srv/eval/results
+    depends_on:
+      api:
+        condition: service_started
+
   measure:
     profiles: ["eval"]
     build:

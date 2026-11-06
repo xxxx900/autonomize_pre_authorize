@@ -1,0 +1,778 @@
+{
+  "api_url": "http://api:8000",
+  "expected": {
+    "PA-001": {
+      "C1": "met",
+      "C2": "met",
+      "C3": "met",
+      "C4": "met",
+      "C5": "met"
+    },
+    "PA-002": {
+      "C1": "met",
+      "C2": "missing",
+      "C3": "met",
+      "C4": "met",
+      "C5": "met"
+    },
+    "PA-003": {
+      "C1": "met",
+      "C2": "met",
+      "C3": "not_met",
+      "C4": "met",
+      "C5": "met"
+    },
+    "PA-004": {
+      "C1": "met",
+      "C2": "met",
+      "C3": "conflicting",
+      "C4": "met",
+      "C5": "met"
+    },
+    "PA-005": {
+      "C1": "met",
+      "C2": "met",
+      "C3": "met",
+      "C4": "not_met",
+      "C5": "met"
+    },
+    "PA-006": {
+      "C1": "met",
+      "C2": "conflicting",
+      "C3": "met",
+      "C4": "met",
+      "C5": "met"
+    },
+    "PA-007": {
+      "C1": "not_met",
+      "C2": "met",
+      "C3": "met",
+      "C4": "met",
+      "C5": "met"
+    },
+    "SYN-001": {
+      "C1": "met",
+      "C2": "met",
+      "C3": "missing",
+      "C4": "met",
+      "C5": "met"
+    },
+    "SYN-002": {
+      "C1": "met",
+      "C2": "conflicting",
+      "C3": "missing",
+      "C4": "met",
+      "C5": "met"
+    },
+    "SYN-003": {
+      "C1": "met",
+      "C2": "not_met",
+      "C3": "not_met",
+      "C4": "met",
+      "C5": "met"
+    },
+    "SYN-004": {
+      "C1": "met",
+      "C2": "not_met",
+      "C3": "met",
+      "C4": "met",
+      "C5": "met"
+    },
+    "SYN-005": {
+      "C1": "met",
+      "C2": "not_met",
+      "C3": "not_met",
+      "C4": "met",
+      "C5": "met"
+    },
+    "SYN-006": {
+      "C1": "met",
+      "C2": "missing",
+      "C3": "missing",
+      "C4": "met",
+      "C5": "met"
+    },
+    "SYN-007": {
+      "C1": "met",
+      "C2": "missing",
+      "C3": "missing",
+      "C4": "met",
+      "C5": "met"
+    },
+    "SYN-008": {
+      "C1": "missing",
+      "C2": "conflicting",
+      "C3": "missing",
+      "C4": "met",
+      "C5": "met"
+    },
+    "SYN-009": {
+      "C1": "missing",
+      "C2": "missing",
+      "C3": "missing",
+      "C4": "met",
+      "C5": "not_met"
+    },
+    "SYN-010": {
+      "C1": "missing",
+      "C2": "missing",
+      "C3": "missing",
+      "C4": "met",
+      "C5": "met"
+    }
+  },
+  "results": [
+    {
+      "request_id": "PA-001",
+      "http": 200,
+      "latency_s": 5.7,
+      "statuses": {
+        "C1": "met",
+        "C2": "met",
+        "C3": "met",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/b1aa0158-c15c-576b-b749-e5c77bc3ad58"
+        ],
+        "C2": [
+          "Observation/17151fc0-9010-5d12-9ee1-d8ca14145838"
+        ],
+        "C3": [
+          "MedicationRequest/2aa57af5-c935-5747-aa4e-aaf41415ba1b"
+        ],
+        "C4": [],
+        "C5": [
+          "Patient/1805a90b-326d-5089-845f-185dae4679fd"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Latest HbA1c 8.1 % on 2026-09-03; threshold 7.0 %",
+        "C3": "365 days of metformin therapy in the 365 days before 2026-10-01",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 54 on 2026-10-01; minimum 18"
+      },
+      "route": "evidence_complete",
+      "summary_source": "template",
+      "flagged_documents": 0,
+      "mismatches": []
+    },
+    {
+      "request_id": "PA-002",
+      "http": 200,
+      "latency_s": 4.36,
+      "statuses": {
+        "C1": "met",
+        "C2": "missing",
+        "C3": "met",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/79827375-1035-5d3b-b935-9ccacefa8ef5"
+        ],
+        "C2": [
+          "Observation/2d8375c4-e283-5938-8028-89234df4224c"
+        ],
+        "C3": [
+          "MedicationRequest/dc92c7d9-74c7-5804-bbee-6c7b4eaf03fb"
+        ],
+        "C4": [],
+        "C5": [
+          "Patient/6c1c6863-68ff-5463-9265-82ff32b83ab1"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "No HbA1c result dated 2026-07-03 to 2026-10-01; latest on record is 7.9 % on 2025-07-20",
+        "C3": "365 days of metformin therapy in the 365 days before 2026-10-01",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 60 on 2026-10-01; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "model",
+      "flagged_documents": 0,
+      "mismatches": []
+    },
+    {
+      "request_id": "PA-003",
+      "http": 200,
+      "latency_s": 4.33,
+      "statuses": {
+        "C1": "met",
+        "C2": "met",
+        "C3": "not_met",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/5ae4d6ba-f2e3-5e4a-8479-a60243c48808"
+        ],
+        "C2": [
+          "Observation/a1a2bf25-abed-5c74-82e5-e988ba805073"
+        ],
+        "C3": [
+          "MedicationRequest/a8ee5bb2-8373-598e-a955-c44b4f48d0b1"
+        ],
+        "C4": [],
+        "C5": [
+          "Patient/db62ce62-d28b-5506-9913-fb2e6bbde087"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Latest HbA1c 9.2 % on 2026-08-20; threshold 7.0 %",
+        "C3": "35 days of metformin therapy in the 365 days before 2026-10-01; 90 required",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 46 on 2026-10-01; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 0,
+      "mismatches": []
+    },
+    {
+      "request_id": "PA-004",
+      "http": 200,
+      "latency_s": 5.02,
+      "statuses": {
+        "C1": "met",
+        "C2": "met",
+        "C3": "conflicting",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/fd8ad258-26c5-5bff-9f88-24f381482e58"
+        ],
+        "C2": [
+          "Observation/3217388e-ed5c-574d-a3b2-fc8fdc9bbda0"
+        ],
+        "C3": [
+          "MedicationRequest/061087a3-cb71-5a24-9142-ff5c46ddfc92"
+        ],
+        "C4": [],
+        "C5": [
+          "Patient/cbe7cb0a-bbe9-5590-b325-609a9467084b"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Latest HbA1c 8.4 % on 2026-09-15; threshold 7.0 %",
+        "C3": "Request form attests 6 months of metformin; record supports 0.7 months (21 days)",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 68 on 2026-10-01; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 0,
+      "mismatches": []
+    },
+    {
+      "request_id": "PA-005",
+      "http": 200,
+      "latency_s": 4.08,
+      "statuses": {
+        "C1": "met",
+        "C2": "met",
+        "C3": "met",
+        "C4": "not_met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/54ca638b-8a0b-5813-8b7b-3849310cabb0"
+        ],
+        "C2": [
+          "Observation/262dabc5-ff2d-5571-aeae-32f6abe60d0a"
+        ],
+        "C3": [
+          "MedicationRequest/fefe022c-ee46-5371-8279-26384a41adda"
+        ],
+        "C4": [
+          "Condition/dd477d57-af4b-5b2d-beca-5a3c27d29b20"
+        ],
+        "C5": [
+          "Patient/9ad895eb-7cc3-5e8f-a557-c0e33552f250"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Latest HbA1c 8.9 % on 2026-09-08; threshold 7.0 %",
+        "C3": "365 days of metformin therapy in the 365 days before 2026-10-01",
+        "C4": "History found: Pancreatitis (disorder) (status resolved)",
+        "C5": "Age 57 on 2026-10-01; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 0,
+      "mismatches": []
+    },
+    {
+      "request_id": "PA-006",
+      "http": 200,
+      "latency_s": 4.47,
+      "statuses": {
+        "C1": "met",
+        "C2": "conflicting",
+        "C3": "met",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/d8713d44-715b-5d4b-8679-9a67e76987c4"
+        ],
+        "C2": [
+          "Observation/640bffe1-2582-5a57-9e41-bb16eb1c7472"
+        ],
+        "C3": [
+          "MedicationRequest/06fd2e8c-07d5-5e46-a9a0-624ad7089feb"
+        ],
+        "C4": [],
+        "C5": [
+          "Patient/bfa29189-5f0f-58c3-a1ed-5592f838790f"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Request form reports HbA1c 7.8 % on 2026-09-12; record shows 6.4 % on that date",
+        "C3": "365 days of metformin therapy in the 365 days before 2026-10-01",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 48 on 2026-10-01; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 1,
+      "mismatches": []
+    },
+    {
+      "request_id": "PA-007",
+      "http": 200,
+      "latency_s": 8.44,
+      "statuses": {
+        "C1": "not_met",
+        "C2": "met",
+        "C3": "met",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/0327d779-72e0-5cf4-ad0b-b0da948d987f"
+        ],
+        "C2": [
+          "Observation/e86c6e85-dbe2-5d71-b67a-dc33079629b5"
+        ],
+        "C3": [
+          "MedicationRequest/93bfb536-a005-5596-8d12-2fd439b1ffc0"
+        ],
+        "C4": [],
+        "C5": [
+          "Patient/5b2b65b1-e350-56fd-95a0-512da5b8e5a5"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded only with clinical status resolved",
+        "C2": "Latest HbA1c 8.4 % on 2026-09-20; threshold 7.0 %",
+        "C3": "365 days of metformin therapy in the 365 days before 2026-10-01",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 65 on 2026-10-01; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 0,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-001",
+      "http": 200,
+      "latency_s": 7.56,
+      "statuses": {
+        "C1": "met",
+        "C2": "met",
+        "C3": "missing",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/b19cd9b8-ebdd-15f4-8361-8b3f26b6bb94"
+        ],
+        "C2": [
+          "Observation/37fb89db-4d0a-79a3-9999-27351cf97e41"
+        ],
+        "C3": [],
+        "C4": [],
+        "C5": [
+          "Patient/509f9a77-2a22-f98b-c539-9a44057efb51"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Latest HbA1c 7.46 % on 2021-11-15; threshold 7.0 %",
+        "C3": "No metformin prescription, intolerance, or eGFR evidence in the record",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 56 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 67,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-002",
+      "http": 200,
+      "latency_s": 7.61,
+      "statuses": {
+        "C1": "met",
+        "C2": "conflicting",
+        "C3": "missing",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/d713b584-63b1-5c5e-a627-6f6ca3a33788"
+        ],
+        "C2": [
+          "Observation/3c6ba664-2a12-7cec-fb10-afe4e8733dfb"
+        ],
+        "C3": [],
+        "C4": [],
+        "C5": [
+          "Patient/d362f4e5-244f-cf80-f2d5-25bcd2c97785"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Request form reports HbA1c 8.2 % on 2021-09-10; record shows 7.49 % on that date",
+        "C3": "No metformin prescription, intolerance, or eGFR evidence in the record",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 47 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 26,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-003",
+      "http": 200,
+      "latency_s": 8.02,
+      "statuses": {
+        "C1": "met",
+        "C2": "not_met",
+        "C3": "not_met",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/0056258b-3e2e-79ad-5c5f-a4f6f804787d"
+        ],
+        "C2": [
+          "Observation/008193ee-a52f-0831-101d-a62c1c21aeea"
+        ],
+        "C3": [
+          "MedicationRequest/07b20c4e-73a1-1e1c-986d-b2987b8d1d24",
+          "MedicationRequest/620471f2-19aa-2aa3-eb77-0c856e700f13",
+          "MedicationRequest/914f5db9-569e-db87-fd32-a67d4831f068",
+          "MedicationRequest/de0b8975-ed9f-3e6c-fed7-6d5dceb43f18",
+          "MedicationRequest/0bbac7c0-6239-4ab5-0e92-fb60f4b48efd"
+        ],
+        "C4": [],
+        "C5": [
+          "Patient/40ef2428-c142-6e65-8e0e-0ee4098dda28"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Latest HbA1c 5.79 % on 2021-10-21; threshold 7.0 %",
+        "C3": "29 days of metformin therapy in the 365 days before 2021-11-19; 90 required; 4 metformin requests have no end date and are not counted",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 47 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "model",
+      "flagged_documents": 20,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-004",
+      "http": 200,
+      "latency_s": 5.21,
+      "statuses": {
+        "C1": "met",
+        "C2": "not_met",
+        "C3": "met",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/9af02fbb-4f7b-9786-73c8-23c5c87a386b"
+        ],
+        "C2": [
+          "Observation/ec71fe29-a9b9-28e8-b5b8-decd046790f9"
+        ],
+        "C3": [
+          "Observation/3a351f84-2dd6-63ac-1d82-95cae2c43e25"
+        ],
+        "C4": [],
+        "C5": [
+          "Patient/be82309d-1a8f-df82-4cd6-5f03e1060e8e"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Latest HbA1c 4.17 % on 2021-10-16; threshold 7.0 %",
+        "C3": "Latest egfr 24.35 on 2021-10-16",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 51 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "model",
+      "flagged_documents": 63,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-005",
+      "http": 200,
+      "latency_s": 7.49,
+      "statuses": {
+        "C1": "met",
+        "C2": "not_met",
+        "C3": "not_met",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/10137ab1-13bf-7820-7a84-817a85354128"
+        ],
+        "C2": [
+          "Observation/0f3d64fb-d705-b07c-e10f-10bc19437dd5"
+        ],
+        "C3": [
+          "MedicationRequest/258829c6-2699-8ce0-a360-b43bd42fe6c8",
+          "MedicationRequest/e4a634aa-dd8e-ff32-a8fe-c912478400df",
+          "MedicationRequest/c3fc265e-04f5-7240-e944-a1a3e61d500f",
+          "MedicationRequest/f9b765e9-72d4-f214-e94d-b09b024a92d0",
+          "MedicationRequest/31ebc581-90f8-4b5f-179e-a0a94217847d",
+          "MedicationRequest/1f080a0c-66c8-2da8-69d7-5a5e5d11077f",
+          "MedicationRequest/738615c3-4213-b679-22de-c6503900fed6",
+          "MedicationRequest/34df20ee-148e-a5b4-afcc-cf4bb908f3b0",
+          "MedicationRequest/01b590e8-0e03-7113-042a-b8f79c8bea72",
+          "MedicationRequest/d8ce25b6-f4d0-82be-e412-129b459ab0f9",
+          "MedicationRequest/f267abaf-cbb4-11ed-9377-8a0674f73480",
+          "MedicationRequest/02085f66-94aa-e5c6-6e43-6736082d485e",
+          "MedicationRequest/c4312a5a-7061-4f83-62e7-b8e13d761a19",
+          "MedicationRequest/3d2c0f11-6e4f-455e-bcd6-711919e0ed63",
+          "MedicationRequest/903ee33f-4dd7-b51d-2450-23b964516739",
+          "MedicationRequest/a0ab0f1d-3d49-d53e-9f1c-f8e16007e31a",
+          "MedicationRequest/2fd80de5-45d4-c862-1982-ad3a1b9a410c",
+          "MedicationRequest/377f569a-ab7e-edd0-0dc5-dfd8ee31daff",
+          "MedicationRequest/14337fba-c572-a31b-27cc-aa18780e79ad",
+          "MedicationRequest/8c2f4ea5-7ec8-962d-8c05-07c63bcf62cb",
+          "MedicationRequest/c4c973c4-ca48-d5c9-a0cf-7903d6b7f622",
+          "MedicationRequest/b5c34c36-7e38-4e07-69e6-2a00967ae84a",
+          "MedicationRequest/5f22d5c6-0830-0519-1254-cbe1c6328b51",
+          "MedicationRequest/f644e651-bcd9-bc44-4bf6-253e580abe79",
+          "MedicationRequest/2544b461-80ad-222c-fb31-b27610511605"
+        ],
+        "C4": [],
+        "C5": [
+          "Patient/d57e867e-4896-9e07-f502-5f4f881bd80e"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "Latest HbA1c 2.41 % on 2021-08-31; threshold 7.0 %",
+        "C3": "80 days of metformin therapy in the 365 days before 2021-11-19; 90 required; 24 metformin requests have no end date and are not counted",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 60 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 53,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-006",
+      "http": 200,
+      "latency_s": 7.1,
+      "statuses": {
+        "C1": "met",
+        "C2": "missing",
+        "C3": "missing",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/afb4cbee-20ba-e6af-3cc1-7ba8c19085bb"
+        ],
+        "C2": [
+          "Observation/ef853916-559d-e5e7-6ebe-96d5a9a7bcb1"
+        ],
+        "C3": [],
+        "C4": [],
+        "C5": [
+          "Patient/060e72d3-912e-55cd-0c92-5faa6cb7a6db"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "No HbA1c result dated 2021-08-21 to 2021-11-19; latest on record is 3.6 % on 2021-08-13",
+        "C3": "No metformin prescription, intolerance, or eGFR evidence in the record",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 52 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "model",
+      "flagged_documents": 53,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-007",
+      "http": 200,
+      "latency_s": 7.3,
+      "statuses": {
+        "C1": "met",
+        "C2": "missing",
+        "C3": "missing",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [
+          "Condition/cd7cf349-ad1e-6644-6951-46338f420c33"
+        ],
+        "C2": [
+          "Observation/e305706d-6a2f-4760-ee6c-a0f7e8a376a3"
+        ],
+        "C3": [],
+        "C4": [],
+        "C5": [
+          "Patient/eb7cffc3-28d2-e8b0-72bc-8e86860ed313"
+        ]
+      },
+      "rationales": {
+        "C1": "Type 2 diabetes mellitus recorded with clinical status active",
+        "C2": "No HbA1c result dated 2021-08-21 to 2021-11-19; latest on record is 6.9 % on 2016-07-20",
+        "C3": "No metformin prescription, intolerance, or eGFR evidence in the record",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 59 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "model",
+      "flagged_documents": 182,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-008",
+      "http": 200,
+      "latency_s": 7.85,
+      "statuses": {
+        "C1": "missing",
+        "C2": "conflicting",
+        "C3": "missing",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [],
+        "C2": [
+          "Observation/59cb0fff-7397-5015-dcd9-937d6ffbe5b8"
+        ],
+        "C3": [],
+        "C4": [],
+        "C5": [
+          "Patient/dba87de8-9e28-0140-47c4-9419277178f0"
+        ]
+      },
+      "rationales": {
+        "C1": "No type 2 diabetes mellitus Condition in the record",
+        "C2": "Request form reports HbA1c 7.4 % on 2021-10-13; record shows 6.25 % on that date",
+        "C3": "No metformin prescription, intolerance, or eGFR evidence in the record",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 61 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 45,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-009",
+      "http": 200,
+      "latency_s": 4.55,
+      "statuses": {
+        "C1": "missing",
+        "C2": "missing",
+        "C3": "missing",
+        "C4": "met",
+        "C5": "not_met"
+      },
+      "sources": {
+        "C1": [],
+        "C2": [],
+        "C3": [],
+        "C4": [],
+        "C5": [
+          "Patient/f7130650-ec26-4a43-fc30-ac3f05cc793d"
+        ]
+      },
+      "rationales": {
+        "C1": "No type 2 diabetes mellitus Condition in the record",
+        "C2": "No HbA1c result dated 2021-08-21 to 2021-11-19",
+        "C3": "No metformin prescription, intolerance, or eGFR evidence in the record",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 16 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 17,
+      "mismatches": []
+    },
+    {
+      "request_id": "SYN-010",
+      "http": 200,
+      "latency_s": 4.48,
+      "statuses": {
+        "C1": "missing",
+        "C2": "missing",
+        "C3": "missing",
+        "C4": "met",
+        "C5": "met"
+      },
+      "sources": {
+        "C1": [],
+        "C2": [],
+        "C3": [],
+        "C4": [],
+        "C5": [
+          "Patient/c628b9c2-31de-fd80-f913-2e9ad36393a9"
+        ]
+      },
+      "rationales": {
+        "C1": "No type 2 diabetes mellitus Condition in the record",
+        "C2": "No HbA1c result dated 2021-08-21 to 2021-11-19",
+        "C3": "No metformin prescription, intolerance, or eGFR evidence in the record",
+        "C4": "No pancreatitis, medullary thyroid carcinoma, or MEN2 Condition in the record",
+        "C5": "Age 43 on 2021-11-19; minimum 18"
+      },
+      "route": "clinician_review",
+      "summary_source": "template",
+      "flagged_documents": 26,
+      "mismatches": []
+    }
+  ]
+}
