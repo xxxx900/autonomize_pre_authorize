@@ -32,7 +32,7 @@ class FhirSettings(BaseSettings):
             FhirAuthMode.BEARER: ("fhir_bearer_token",),
             FhirAuthMode.SMART: ("fhir_token_url", "fhir_client_id", "fhir_client_secret"),
         }[self.fhir_auth_mode]
-        absent = [name.upper() for name in needed if getattr(self, name) is None]
+        absent = [name.upper() for name in needed if not getattr(self, name)]
         if absent:
             raise ValueError(f"FHIR_AUTH_MODE={self.fhir_auth_mode} requires {', '.join(absent)}")
         return self
