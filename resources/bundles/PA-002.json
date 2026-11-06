@@ -1,0 +1,255 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:6c1c6863-68ff-5463-9265-82ff32b83ab1",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "6c1c6863-68ff-5463-9265-82ff32b83ab1",
+        "meta": {
+          "tag": [
+            {
+              "system": "urn:autonomize:interview",
+              "code": "synthetic-edited",
+              "display": "Synthetic interview data, not a real patient"
+            }
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "MR"
+                }
+              ]
+            },
+            "system": "http://payer-a.example/mrn",
+            "value": "SYN-002-1965"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "Example087",
+            "given": [
+              "Desmond"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1965-11-02"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/6c1c6863-68ff-5463-9265-82ff32b83ab1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:79827375-1035-5d3b-b935-9ccacefa8ef5",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "79827375-1035-5d3b-b935-9ccacefa8ef5",
+        "meta": {
+          "tag": [
+            {
+              "system": "urn:autonomize:interview",
+              "code": "synthetic-edited",
+              "display": "Synthetic interview data, not a real patient"
+            }
+          ]
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus (disorder)"
+            }
+          ],
+          "text": "Type 2 diabetes mellitus (disorder)"
+        },
+        "subject": {
+          "reference": "Patient/6c1c6863-68ff-5463-9265-82ff32b83ab1"
+        },
+        "onsetDateTime": "2019-01-22",
+        "recordedDate": "2019-01-22"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/79827375-1035-5d3b-b935-9ccacefa8ef5"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:2d8375c4-e283-5938-8028-89234df4224c",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "2d8375c4-e283-5938-8028-89234df4224c",
+        "meta": {
+          "tag": [
+            {
+              "system": "urn:autonomize:interview",
+              "code": "synthetic-edited",
+              "display": "Synthetic interview data, not a real patient"
+            }
+          ]
+        },
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c/Hemoglobin.total in Blood"
+            }
+          ],
+          "text": "Hemoglobin A1c/Hemoglobin.total in Blood"
+        },
+        "subject": {
+          "reference": "Patient/6c1c6863-68ff-5463-9265-82ff32b83ab1"
+        },
+        "effectiveDateTime": "2025-07-20",
+        "issued": "2025-07-20T12:00:00Z",
+        "valueQuantity": {
+          "value": 7.9,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/2d8375c4-e283-5938-8028-89234df4224c"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:da1e73c2-f28f-5843-bb73-344438875d5d",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "da1e73c2-f28f-5843-bb73-344438875d5d",
+        "meta": {
+          "tag": [
+            {
+              "system": "urn:autonomize:interview",
+              "code": "synthetic-edited",
+              "display": "Synthetic interview data, not a real patient"
+            }
+          ]
+        },
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "18262-6",
+              "display": "LDL Cholesterol"
+            }
+          ],
+          "text": "LDL Cholesterol"
+        },
+        "subject": {
+          "reference": "Patient/6c1c6863-68ff-5463-9265-82ff32b83ab1"
+        },
+        "effectiveDateTime": "2026-08-30",
+        "issued": "2026-08-30T12:00:00Z",
+        "valueQuantity": {
+          "value": 131,
+          "unit": "mg/dL",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/dL"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/da1e73c2-f28f-5843-bb73-344438875d5d"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:dc92c7d9-74c7-5804-bbee-6c7b4eaf03fb",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "dc92c7d9-74c7-5804-bbee-6c7b4eaf03fb",
+        "meta": {
+          "tag": [
+            {
+              "system": "urn:autonomize:interview",
+              "code": "synthetic-edited",
+              "display": "Synthetic interview data, not a real patient"
+            }
+          ]
+        },
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+              "code": "860975",
+              "display": "24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet"
+            }
+          ],
+          "text": "24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet"
+        },
+        "subject": {
+          "reference": "Patient/6c1c6863-68ff-5463-9265-82ff32b83ab1"
+        },
+        "authoredOn": "2024-09-05",
+        "requester": {
+          "display": "Dr. Provider One (synthetic)"
+        },
+        "dosageInstruction": [
+          {
+            "text": "1 tablet by mouth daily with evening meal"
+          }
+        ],
+        "reasonReference": [
+          {
+            "reference": "Condition/79827375-1035-5d3b-b935-9ccacefa8ef5"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/dc92c7d9-74c7-5804-bbee-6c7b4eaf03fb"
+      }
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "policy_id": "MP-SYN-021",
+  "title": "GLP-1 receptor agonists for type 2 diabetes mellitus (adult)",
+  "payer": "Payer A (synthetic)",
+  "version": "2026.1",
+  "effective": "2026-07-01",
+  "note": "SYNTHETIC POLICY FOR INTERVIEW USE. Adapted in the shape of a real medical policy; not clinical guidance. Codes are illustrative: match on the listed code or any descendant, or on the ingredient or display where a terminology service is unavailable.",
+  "status_semantics": {
+    "met": "the record holds qualifying evidence and nothing attested contradicts it",
+    "not_met": "the record holds evidence that the criterion fails",
+    "missing": "the record holds no qualifying evidence either way; name what to ask the provider for",
+    "conflicting": "a structured value on the request form disagrees with the record on a fact this criterion depends on; takes precedence over met and not_met. Absence of a record is missing, never conflicting."
+  },
+  "covered_medications": [
+    {
+      "rxnorm": "1991302",
+      "display": "semaglutide (injection)"
+    },
+    {
+      "rxnorm": "1551291",
+      "display": "dulaglutide"
+    },
+    {
+      "rxnorm": "897122",
+      "display": "liraglutide"
+    }
+  ],
+  "request_date_source": "request_form.request_date (do not assume today)",
+  "criteria": [
+    {
+      "id": "C1",
+      "requirement": "Type 2 diabetes mellitus, active, documented in the record",
+      "fhir": {
+        "resource": "Condition",
+        "code": {
+          "system": "http://snomed.info/sct",
+          "code": "44054006"
+        },
+        "clinicalStatus_in": [
+          "active",
+          "recurrence",
+          "relapse"
+        ]
+      }
+    },
+    {
+      "id": "C2",
+      "requirement": "HbA1c >= 7.0 % on a result dated within 90 days of the request date",
+      "fhir": {
+        "resource": "Observation",
+        "code": {
+          "system": "http://loinc.org",
+          "code": "4548-4"
+        },
+        "value_min": 7.0,
+        "unit": "%",
+        "window_days": 90
+      }
+    },
+    {
+      "id": "C3",
+      "requirement": "At least 90 days of metformin therapy falling within the 12 months before the request date, OR documented intolerance or contraindication to metformin",
+      "fhir": {
+        "path_a": {
+          "resource": "MedicationRequest",
+          "ingredient_rxnorm": "6809",
+          "product_rxnorm_example": "860975",
+          "min_days_in_window": 90,
+          "window_days": 365,
+          "duration": "from authoredOn to dispenseRequest.validityPeriod.end, or to the request date if still active"
+        },
+        "path_b": {
+          "resource": "AllergyIntolerance",
+          "ingredient_rxnorm": "6809"
+        },
+        "path_c": {
+          "resource": "Observation",
+          "code": {
+            "system": "http://loinc.org",
+            "code": "33914-3"
+          },
+          "value_max": 30,
+          "note": "eGFR < 30 is a contraindication"
+        }
+      }
+    },
+    {
+      "id": "C4",
+      "requirement": "No history of pancreatitis, medullary thyroid carcinoma, or multiple endocrine neoplasia type 2, at any time",
+      "fhir": {
+        "resource": "Condition",
+        "codes": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "75694006",
+            "display": "Pancreatitis"
+          },
+          {
+            "system": "http://snomed.info/sct",
+            "code": "255032005",
+            "display": "Medullary thyroid carcinoma"
+          },
+          {
+            "system": "http://snomed.info/sct",
+            "code": "61808009",
+            "display": "MEN2"
+          }
+        ],
+        "note": "A resolved or inactive Condition still counts as history. Match the listed codes or their descendants."
+      }
+    },
+    {
+      "id": "C5",
+      "requirement": "Age 18 or older on the request date",
+      "fhir": {
+        "resource": "Patient",
+        "element": "birthDate"
+      }
+    }
+  ],
+  "decision_rule": {
+    "evidence_complete": "C1, C2, C3, C4 and C5 all met",
+    "otherwise": "clinician_review, with missing_documents naming exactly what the provider should send",
+    "forbidden": "The service assembles evidence only. It never recommends or makes a determination of any kind; licensed clinicians do."
+  },
+  "attestation_handling": "Where the prescriber attestation and the record disagree, mark the criterion conflicting and cite both."
+}

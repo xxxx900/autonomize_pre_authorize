@@ -1,0 +1,30 @@
+{
+  "request_id": "PA-003",
+  "request_date": "2026-10-01",
+  "urgency": "standard",
+  "payer": "Payer A (synthetic)",
+  "policy_id": "MP-SYN-021",
+  "member": {
+    "patient_id": "db62ce62-d28b-5506-9913-fb2e6bbde087",
+    "fhir_reference": "Patient/db62ce62-d28b-5506-9913-fb2e6bbde087"
+  },
+  "requested_medication": {
+    "rxnorm": "1991302",
+    "display": "Semaglutide 0.25 MG/0.5 MG Injection, weekly"
+  },
+  "diagnosis_claimed": {
+    "snomed": "44054006",
+    "display": "Type 2 diabetes mellitus (disorder)"
+  },
+  "prescriber": {
+    "display": "Dr. Provider One (synthetic)",
+    "npi": "0000000000"
+  },
+  "prescriber_attestation": {
+    "metformin_trial_months": 1,
+    "hba1c_value": 9.2,
+    "hba1c_date": "2026-08-20",
+    "notes": "Newly diagnosed; requesting GLP-1 for weight and glycemic benefit."
+  },
+  "note": "SYNTHETIC REQUEST FOR INTERVIEW USE. No real member, provider or clinical data."
+}
