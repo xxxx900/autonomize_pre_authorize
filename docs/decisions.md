@@ -88,3 +88,19 @@ The MCP tool `get_policy` returns the whole structured policy, and the rules rea
 - **It adds an injection path (LLM01) and infrastructure.** Retrieved text goes into the prompt, so the corpus becomes an instruction surface. It also brings an embedding model, a vector store inside the BAA, and retrieval metrics to evaluate.
 
 RAG would pay off in a different job: a payer library of hundreds of free-text policy PDFs. There, retrieval helps a policy analyst find the right policy and draft its structured criteria, and a human reviews the result before it becomes a rules file. That is authoring assistance outside the request path, a candidate after week six.
+
+## Model lives in one package
+ `app/domain/`**, and the role packages (`api`, `rules`, `loaders`, `audit`, `summary`) import from it. `tests/test_code_shape.py` enforces this. | A reader finds the shape of any packet, policy, or audit row in one place, and no package defines its own copy. |
+
+## FastAPI dependencies and `response_model` guard each route.
+A `RoleGuard` dependency checks the role and audits a refusal before the handler runs. `response_model=EvidencePacket` returns only the declared fields.  Access control is declared once per route, and a handler cannot leak a field it did not declare, such as raw FHIR. 
+
+## Policy is data; rules are code keyed by criterion.
+The policy JSON supplies thresholds, codes, and windows. `app/rules/` holds one function per criterion, registered in `CRITERIA`. A request names its `policy_id`. Changing a threshold or code needs no code change. The service holds one policy today. Adding a policy with the same criteria means a new JSON file. A policy with new criteria also needs new rule modules and a policy registry. 
+
+## Third-party data is mapped at one boundary.
+Member data stays in the FHIR server. `loaders/fhir_record.py` turns FHIR JSON into `PatientRecord`, and the rules read only that. SQLite holds only the audit log (D7).  A real source with different fields changes one loader and its mapping, not the rules, the packet, or the audit. Unknown source columns are handled by mapping the fields the rules need, and nothing else is copied. 
+
+## A stateless REST API with a bearer token on every call.
+No session state is kept between requests. Any instance can answer any request, and the same shape works behind OIDC, where the bearer token is a signed JWT checked per request. 
+

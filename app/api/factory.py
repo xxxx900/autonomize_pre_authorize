@@ -111,7 +111,7 @@ def create_app(
     summarizer: Summarizer | None = None,
 ) -> FastAPI:
     """Build the app. Tests pass their own FHIR client and summarizer."""
-    settings = settings or Settings()
+    settings = settings or Settings() 
     configure_logging(settings.log_level)
     app = FastAPI(
         title="PA Evidence Packet", lifespan=lifespan, default_response_class=PrettyJSONResponse

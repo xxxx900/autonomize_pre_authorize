@@ -1,8 +1,8 @@
 # Prior Authorization Evidence Packet: FDE Assignment v2
 
-This service assembles the evidence for a GLP-1 prior-authorization request against Payer A's policy MP-SYN-021. For each of the five criteria it returns `met`, `not_met`, `missing`, or `conflicting`, the FHIR resources behind that status, the documents to ask the provider for, and a two-sentence summary. **It never decides.** Deterministic Python rules compute every status. A local 3B model writes only the summary, and a summary that fails the checks is replaced by a template. `route` is only `evidence_complete` or `clinician_review`.
-
-> "Show me what the policy needs, show me where it is in the chart, tell me what's missing, and never tell me what to decide." (Payer A's nurse lead)
+This service assembles the evidence for a GLP-1 prior-authorization request against Payer A's policy MP-SYN-021. For each of the five criteria it returns `met`, `not_met`, `missing`, or `conflicting`, the FHIR resources behind that status, the documents to ask the provider for, and a two-sentence summary. **It never decides.** Deterministic Python rules compute every status. A local 3B model writes only the summary, and a summary that fails the checks is replaced by a template. `route` is only `evidence_complete` or `clinician_review`. 
+Client request quote:
+> "Show me what the policy needs, show me where it is in the chart, tell me what's missing, and never tell me what to decide."
 
 Everything here is synthetic: the supplied data pack and the Synthea sample only.
 
@@ -182,7 +182,7 @@ Full diagrams, including where data may and may not go: [`docs/dataflow.md`](doc
 
 ## Technical decisions
 
-- Design decisions D1 to D9 (rules, not model; free text never parsed; agent as second front door; and others): [`implementation-plan.md` §2](implementation-plan.md#2-key-design-decisions), with what changed in [`docs/plan.md`](docs/plan.md).
+- Design decisions D1 to D14 (rules, not model; free text never parsed; agent as second front door; and others): [`implementation-plan.md` §2](implementation-plan.md#2-key-design-decisions), with what changed in [`docs/plan.md`](docs/plan.md).
 - Policy interpretation calls (PA-004, PA-007, C3 windows, exact codes, deceased members): [`docs/decisions.md`](docs/decisions.md).
 - Summary model allow-list and dropdown, policy chosen by the request, and why the policy lookup is not RAG: [engineering decisions](docs/decisions.md#engineering-decisions).
 
@@ -192,17 +192,18 @@ The plan's budget per phase and the git timestamps are in [`docs/provenance.md#h
 
 | Item | Plan budget | Notes |
 |---|---|---|
-| 1 FHIR and load | 1.0 h | Phases 0 and 1 |
-| 2 Endpoint and rules | 1.5 h | Phase 2 |
-| 3 MCP and agent | 0.75 h | Phase 6 |
+| 0 Requirements Analysis and Research | 4 h | Phase 0 |
+| 1 FHIR and load | 0.5 h | Phases 0 and 1 |
+| 2 Endpoint and rules | 0.5 h | Phase 2 |
+| 3 MCP and agent | 0.5 h | Phase 6 |
 | 4 Safety | 0.5 h | Phase 4 |
 | 5 Evaluation | 1.5 h | Phase 5, plus three runs of the 7B measurement |
-| 6 Plan | part of 0.75 h | Phase 9 |
+| 6 Plan | part of 1 h | Phase 9 |
 | 7 Security notes | part of 0.75 h | Phase 9 |
-| 8 Enterprise minimum | 1.25 h | Phase 3 |
+| 8 Enterprise minimum | 2 h | Phase 3 |
 | Nurse page, CI | 0.75 h | Phases 7 and 8 |
 
-The git history shows when commits were made, not how long the work took. [Provenance](docs/provenance.md#hours) explains why those spans are a lower bound.
+The hours are spent the most to understand the context of the requirements, who is the audience, what outcome does this system try to achieve, the current workflow, what does the end user want to see.
 
 ## Provenance
 
