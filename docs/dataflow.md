@@ -1,6 +1,6 @@
 # Data flow
 
-The service has two front doors, the HTTP API and the MCP server, and both call the same `build_packet` function in `app/main.py`. This page shows the services, the request flow for one evidence packet, and where data is and is not allowed to go.
+The service has two front doors, the HTTP API and the MCP server, and both call the same `EvidencePipeline.run` in `app/api/pipeline.py`. This page shows the services, the request flow for one evidence packet, and where data is and is not allowed to go.
 
 ## Services and front doors
 
@@ -12,7 +12,7 @@ flowchart LR
     subgraph compose["Docker Compose network"]
         api["api<br/>FastAPI :8000"]
         gate["BearerGate"] --> mcp["mcp<br/>FastMCP :8001"]
-        api --> pipeline["build_packet<br/>shared pipeline"]
+        api --> pipeline["EvidencePipeline.run<br/>shared pipeline"]
         mcp --> pipeline
         pipeline -->|"FHIR searches and GET by id"| hapi["hapi<br/>HAPI FHIR R4 :8080"]
         pipeline -->|"packet facts only"| ollama["ollama<br/>summary model :11434"]
@@ -69,8 +69,10 @@ sequenceDiagram
 
 | Data | Reaches the packet | Reaches the model | Reaches the audit log | Reaches the logs |
 |---|---|---|---|---|
-| Structured FHIR values (codes, statuses, dates, quantities) | Yes, as rationales and source references | Yes, through `evidence_text` | No | No |
+| Structured FHIR values (codes, statuses, dates, quantities) | Yes, as rationales, source references, and the `evidence` facts of each criterion | Yes, through `evidence_text` | No | No |
+| The member's Patient id | Yes, as a source reference | No | Yes, as `context.subject` on evidence reads, with the resource types and count read | No |
 | Free text (`Condition.note`, document attachments, form `notes`) | No | No | No | No |
 | Request id and policy id | Yes | The request date only | Yes, as `resource` | No, only a per-call request id |
 | Caller identity | No | No | Actor and role | No |
+| Timings and summary trace | Yes, as `trace` | No | Yes, as `context.duration_ms` and `context.summary` | Only per-call `duration_ms` and the fallback reason |
 | Model output | As `summary`, after the checks pass | Not applicable | No | No, only the exception type on fallback |

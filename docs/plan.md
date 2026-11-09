@@ -8,10 +8,10 @@ D1 to D9 hold as written. Deterministic rules compute every status (D1). The mod
 
 ## Changes to the code layout
 
-- The rules live in one module, `app/rules.py`, with a `CRITERIA` registry that maps `C1` to `C5` to their functions. The plan sketched a package with one file per criterion. One file keeps the shared helpers, such as `_latest` and `_covered_days`, next to their callers.
-- `app/record.py` holds the parsed record and request form. `app/fhir_client.py` turns FHIR JSON into that record at the boundary, as D9 requires.
-- `app/pipeline.py` holds `PipelineError`, and `create_app` exposes one `build_packet` function that the API route and the MCP tool both call (979294a). The two front doors cannot drift apart because they share one function.
-- Cited-source verification moved from a planned `app/sources.py` into `app/safety.py`, next to the forbidden-word and faithfulness checks (042bd35).
+- The rules are a package with one file per criterion, as the plan sketched: [`app/rules/c1_diagnosis.py`](../app/rules/c1_diagnosis.py) to [`c5_age.py`](../app/rules/c5_age.py), with shared helpers in `matching.py` and `therapy.py`, and [`evaluate.py`](../app/rules/evaluate.py) running all five. The first build used a single `app/rules.py`; the readability pass split it.
+- Frozen models live only in [`app/domain/`](../app/domain/). [`app/loaders/fhir_record.py`](../app/loaders/fhir_record.py) turns FHIR JSON into a `PatientRecord` at the boundary, as D9 requires. `tests/test_code_shape.py` fails if a model appears anywhere else.
+- [`app/api/pipeline.py`](../app/api/pipeline.py) holds `EvidencePipeline.run` and `PipelineError`. The API route and the MCP tool both call that one method (first as `build_packet`, 979294a), so the two front doors cannot drift apart.
+- Cited-source verification (`missing_sources`) sits in [`app/summary/safety.py`](../app/summary/safety.py), next to the faithfulness checks, instead of a planned `app/sources.py` (042bd35).
 
 ## Changes to behavior
 

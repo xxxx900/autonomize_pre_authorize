@@ -26,7 +26,7 @@ Every command below runs in a container. None of them takes a model's word for t
 
 | Check | Command | What it proves |
 |---|---|---|
-| Lint, format, and unit tests (161 tests at the last commit) | `docker compose --profile test run --rm --build test` | Rules, auth, audit chain, loader, summary checks, MCP gate, and API behavior against a fake FHIR server |
+| Lint, format, and unit tests (211 tests) | `docker compose --profile test run --rm --build test` | Rules, auth, audit chain, loader, summary checks, MCP gate, and API behavior against a fake FHIR server |
 | Seven supplied requests | `python -m scripts.check_seven` against the live API | Every status and route matches plan section 5 |
 | Seventeen requests | `docker compose --profile eval run --rm run-eval` | Every status matches plan section 5 or the hand audit in `eval/synthea_expected.json` |
 | Hand audit of ten Synthea records | `python -m eval.audit_facts`, then reading | Expected statuses written from the raw bundles before any engine run on them (commit d961864 precedes the eval runner in cef8412) |

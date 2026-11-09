@@ -61,3 +61,30 @@ SYN-007's member has `Patient.deceasedDateTime` 2016-07-21, five years before th
 ## The Synthea request date is 2021-11-19
 
 The supplied requests carry their own request date. The ten Synthea requests are written for this evaluation, so their date is a choice. Every request uses 2021-11-19, the day the sample was generated. Synthea simulates each life up to that day, so it is the latest date for which the records are complete, and the 90-day HbA1c window and the 12-month metformin window both fall on recent data. One shared date also means the windows were not tuned per patient to produce a status.
+
+# Engineering decisions
+
+These are design choices rather than readings of the policy.
+
+## The policy is chosen by the request, not a dropdown
+
+Each request form names its `policy_id`, and [`EvidencePipeline.load_form`](../app/api/pipeline.py) refuses a form whose policy the service does not hold (422). The policy is not a reviewer's choice. A dropdown would let a reviewer pick the policy that produces the answer they want, and the audit row would then have to explain why that policy was used.
+
+A second policy also needs code, not just a file. The rules read thresholds and code lists from the policy JSON, but the criteria themselves are typed to MP-SYN-021 (`policy.c1` to `policy.c5` in [`app/domain/policy.py`](../app/domain/policy.py)). A new version of the same policy, such as a changed HbA1c threshold, is a new file set through `POLICY_FILE`, and its hash appears in every packet and audit row. A different policy, such as one for SGLT2 inhibitors, needs its own criteria module and a registry keyed by `policy_id`. That registry is the week-six change. A dropdown is not.
+
+## The summary model is picked from an allow-list
+
+`SUMMARY_MODEL` is the default and `SUMMARY_MODEL_CHOICES` lists the other models a caller may pick. The worksheet fills its "Summary model" dropdown from [`GET /catalog`](../app/api/routes/catalog.py) and sends `?summary_model=` with the evidence request. A name outside the list gets a 422, and the refusal is audited, so a caller cannot make Ollama pull or run an unvetted model. The chosen model is recorded in the packet's `trace.summary.model` and in the audit row, and every model's output goes through the same checks in [`app/summary/output.py`](../app/summary/output.py). `GET /health/details` reports any allowed model that is not pulled.
+
+The agent's model is `AGENT_MODEL`, or `--model` for one run. It is a command-line tool, so it has no dropdown.
+
+## The policy lookup stays a keyed tool, not RAG
+
+The MCP tool `get_policy` returns the whole structured policy, and the rules read it by key. Retrieval-augmented generation would embed the policy text, retrieve the chunks nearest a query, and put them in the model's prompt. For this service RAG would cost more than it gains:
+
+- **It answers a question nobody asks here.** RAG finds relevant text in a corpus too large for the prompt. MP-SYN-021 is one 5-criterion JSON file, and the request names it. There is nothing to search.
+- **The model does not read the policy.** Statuses come from deterministic rules (D1). The summary model sees only the finished packet (D2). Retrieved policy text would reach only the agent's narration, which is labelled "not evidence".
+- **Retrieval is non-deterministic and can be partial.** Chunking can split a criterion from its exception, such as C3's intolerance path. The packet cites the exact clause and the policy file's SHA-256, and a retrieved chunk cannot give the same guarantee.
+- **It adds an injection path (LLM01) and infrastructure.** Retrieved text goes into the prompt, so the corpus becomes an instruction surface. It also brings an embedding model, a vector store inside the BAA, and retrieval metrics to evaluate.
+
+RAG would pay off in a different job: a payer library of hundreds of free-text policy PDFs. There, retrieval helps a policy analyst find the right policy and draft its structured criteria, and a human reviews the result before it becomes a rules file. That is authoring assistance outside the request path, a candidate after week six.

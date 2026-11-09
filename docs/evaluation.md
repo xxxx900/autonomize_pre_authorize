@@ -43,28 +43,28 @@ The default HAPI heap (`-Xmx2g`) was enough. The first load failed with HTTP 404
 
 ## Results
 
-`eval/results/eval.md` is the output of `docker compose --profile eval run --rm run-eval` on the live stack. All 85 criterion statuses agree with the expected statuses.
+`eval/results/eval.md` is the output of `docker compose --profile eval run --rm run-eval` on the live stack (rerun 2026-11-08). All 85 criterion statuses agree with the expected statuses. Two columns are checked outside the API: **Sources resolve** fetches every cited resource (criterion sources, conflict sources, and flagged documents) straight from HAPI, and all 674 answer. **Faithful** reruns the forbidden-word and faithfulness checks on the summary actually served, and all 17 pass, whether the model or the template wrote them.
 
-| Request | C1 | C2 | C3 | C4 | C5 | Route | Summary | Flagged docs | Latency |
-|---|---|---|---|---|---|---|---|---|---|
-| PA-001 | met | met | met | met | met | evidence_complete | template | 0 | 5.7 s |
-| PA-002 | met | missing | met | met | met | clinician_review | model | 0 | 4.36 s |
-| PA-003 | met | met | not_met | met | met | clinician_review | template | 0 | 4.33 s |
-| PA-004 | met | met | conflicting | met | met | clinician_review | template | 0 | 5.02 s |
-| PA-005 | met | met | met | not_met | met | clinician_review | template | 0 | 4.08 s |
-| PA-006 | met | conflicting | met | met | met | clinician_review | template | 1 | 4.47 s |
-| PA-007 | not_met | met | met | met | met | clinician_review | template | 0 | 8.44 s |
-| SYN-001 | met | met | missing | met | met | clinician_review | template | 67 | 7.56 s |
-| SYN-002 | met | conflicting | missing | met | met | clinician_review | template | 26 | 7.61 s |
-| SYN-003 | met | not_met | not_met | met | met | clinician_review | model | 20 | 8.02 s |
-| SYN-004 | met | not_met | met | met | met | clinician_review | model | 63 | 5.21 s |
-| SYN-005 | met | not_met | not_met | met | met | clinician_review | template | 53 | 7.49 s |
-| SYN-006 | met | missing | missing | met | met | clinician_review | model | 53 | 7.1 s |
-| SYN-007 | met | missing | missing | met | met | clinician_review | model | 182 | 7.3 s |
-| SYN-008 | missing | conflicting | missing | met | met | clinician_review | template | 45 | 7.85 s |
-| SYN-009 | missing | missing | missing | met | not_met | clinician_review | template | 17 | 4.55 s |
-| SYN-010 | missing | missing | missing | met | met | clinician_review | template | 26 | 4.48 s |
-| Agreement | 17/17 | 17/17 | 17/17 | 17/17 | 17/17 | | | | |
+| Request | C1 | C2 | C3 | C4 | C5 | Route | Sources resolve | Summary | Faithful | Flagged docs | Latency |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| PA-001 | met | met | met | met | met | evidence_complete | 4/4 | template | yes | 0 | 8.6 s |
+| PA-002 | met | missing | met | met | met | clinician_review | 4/4 | model | yes | 0 | 4.48 s |
+| PA-003 | met | met | not_met | met | met | clinician_review | 4/4 | template | yes | 0 | 4.75 s |
+| PA-004 | met | met | conflicting | met | met | clinician_review | 4/4 | template | yes | 0 | 5.28 s |
+| PA-005 | met | met | met | not_met | met | clinician_review | 5/5 | template | yes | 0 | 4.22 s |
+| PA-006 | met | conflicting | met | met | met | clinician_review | 5/5 | template | yes | 1 | 4.93 s |
+| PA-007 | not_met | met | met | met | met | clinician_review | 4/4 | template | yes | 0 | 9.56 s |
+| SYN-001 | met | met | missing | met | met | clinician_review | 70/70 | template | yes | 67 | 8.75 s |
+| SYN-002 | met | conflicting | missing | met | met | clinician_review | 29/29 | template | yes | 26 | 8.56 s |
+| SYN-003 | met | not_met | not_met | met | met | clinician_review | 28/28 | model | yes | 20 | 9.0 s |
+| SYN-004 | met | not_met | met | met | met | clinician_review | 67/67 | model | yes | 63 | 5.7 s |
+| SYN-005 | met | not_met | not_met | met | met | clinician_review | 81/81 | template | yes | 53 | 8.04 s |
+| SYN-006 | met | missing | missing | met | met | clinician_review | 56/56 | model | yes | 53 | 7.77 s |
+| SYN-007 | met | missing | missing | met | met | clinician_review | 185/185 | model | yes | 182 | 8.04 s |
+| SYN-008 | missing | conflicting | missing | met | met | clinician_review | 47/47 | template | yes | 45 | 8.97 s |
+| SYN-009 | missing | missing | missing | met | not_met | clinician_review | 18/18 | template | yes | 17 | 5.13 s |
+| SYN-010 | missing | missing | missing | met | met | clinician_review | 27/27 | template | yes | 26 | 5.42 s |
+| Agreement | 17/17 | 17/17 | 17/17 | 17/17 | 17/17 | | | | | | |
 
 The first run, before the fix in 9cbd356, disagreed on one cell: SYN-003 C3 was `conflicting` where the hand audit expected `not_met`. See the first finding.
 
@@ -119,7 +119,7 @@ What each model got wrong:
 
 ### The earlier 3B numbers are out of date
 
-`eval/results/models.md`, committed in cb5f1d7, reports `llama3.2:3b` at 43% accepted (3 of 7 packets). The model's output has not changed. Its stored PA-003 and PA-005 summaries are word for word what this run produced. The checks changed. The merge commit b7ff852 changed `stated_statuses` in `app/safety.py` to collect every status word in a clause, which closed the hedged-claim leak that `models.md` describes. "C3 is not_met, missing or conflicting" is now rejected for a `not_met` criterion. Rescored with the current `faithfulness_problems`, the stored `models.json` gives `llama3.2:3b` 14% (1 of 7), the same as this run. `models.md` is left as committed, as a record of what was measured then.
+`eval/results/models.md`, committed in cb5f1d7, reports `llama3.2:3b` at 43% accepted (3 of 7 packets). The model's output has not changed. Its stored PA-003 and PA-005 summaries are word for word what this run produced. The checks changed. The merge commit b7ff852 changed `stated_statuses` in `app/safety.py` (now [`app/summary/safety.py`](../app/summary/safety.py)) to collect every status word in a clause, which closed the hedged-claim leak that `models.md` describes. "C3 is not_met, missing or conflicting" is now rejected for a `not_met` criterion. Rescored with the current `faithfulness_problems`, the stored `models.json` gives `llama3.2:3b` 14% (1 of 7), the same as this run. `models.md` is left as committed, as a record of what was measured then.
 
 ### What the numbers mean for the default
 
