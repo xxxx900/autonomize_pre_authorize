@@ -1,0 +1,147 @@
+#!/usr/bin/env bash
+# Drive an isolated copy of the PA evidence stack for verification.
+# Compose project "pa-verify" on ports 18000 (api), 18080 (hapi), 18001 (mcp), 21434 (ollama),
+# with per-run tokens. Never touches the developer's .env, ports, or audit volume.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
+STATE="$ROOT/.verify"
+PROJECT=pa-verify
+API="http://localhost:18000"
+SOURCE_MODELS_VOLUME="${PA_VERIFY_MODELS_FROM:-autonomize_pre_authorize_ollama-data}"
+
+die() { echo "pa-verify: $*" >&2; exit 1; }
+run_id() { [ -f "$STATE/current" ] || die "no run; start one with: pa-verify up"; cat "$STATE/current"; }
+envfile() { echo "$STATE/runs/$(run_id)/verify.env"; }
+evidence() { echo "$STATE/evidence/$(run_id)"; }
+dc() { (cd "$ROOT" && docker compose -p "$PROJECT" --env-file "$(envfile)" "$@"); }
+token() {
+  case "$1" in
+    nurse) grep '^NURSE_TOKEN=' "$(envfile)" | cut -d= -f2 ;;
+    admin) grep '^ADMIN_TOKEN=' "$(envfile)" | cut -d= -f2 ;;
+    wrong) echo "not-a-real-token" ;;
+    none) echo "" ;;
+    *) die "role must be nurse, admin, wrong, or none" ;;
+  esac
+}
+
+seed_models() {
+  # Copy the pulled models from the developer's Ollama volume so a run does not pull 4 GB.
+  local target="${PROJECT}_ollama-data"
+  docker volume inspect "$target" >/dev/null 2>&1 && return 0
+  docker volume create "$target" >/dev/null
+  if docker volume inspect "$SOURCE_MODELS_VOLUME" >/dev/null 2>&1; then
+    echo "seeding models from $SOURCE_MODELS_VOLUME"
+    MSYS_NO_PATHCONV=1 docker run --rm -v "$SOURCE_MODELS_VOLUME:/from:ro" -v "$target:/to" \
+      alpine sh -c 'cp -a /from/. /to/'
+  else
+    echo "no $SOURCE_MODELS_VOLUME volume; ollama-pull will download the models (about 4 GB)"
+  fi
+}
+
+cmd_up() {
+  local id; id="$(date +%Y%m%d-%H%M%S)"
+  mkdir -p "$STATE/runs/$id" "$STATE/evidence/$id"
+  echo "$id" > "$STATE/current"
+  local t; t() { python -c "import secrets; print(secrets.token_urlsafe(24))"; }
+  cat > "$STATE/runs/$id/verify.env" <<ENV
+NURSE_TOKEN=$(t)
+ADMIN_TOKEN=$(t)
+MCP_TOKEN=$(t)
+API_HOST_PORT=18000
+HAPI_HOST_PORT=18080
+MCP_HOST_PORT=18001
+OLLAMA_HOST_PORT=21434
+ENV
+  seed_models
+  dc up -d --build
+  echo "waiting for loader, models, and readiness"
+  for _ in $(seq 1 120); do
+    if [ "$(curl -s -o /dev/null -w '%{http_code}' "$API/ready")" = 200 ] \
+      && dc ps -a --format '{{.Service}} {{.State}} {{.ExitCode}}' | grep -q '^ollama-pull exited 0' \
+      && [ "$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $(token nurse)" \
+              "$API/requests/PA-001/evidence")" = 200 ]; then
+      echo "ready: run $id, api $API, evidence $(evidence)"; return 0
+    fi
+    sleep 5
+  done
+  dc ps -a; die "stack not usable after 10 minutes; see: pa-verify logs"
+}
+
+cmd_doctor() {
+  local fail=0
+  echo "run: $(run_id)   env: $(envfile)"
+  dc ps --format '{{.Service}} {{.State}} {{.Health}}'
+  local owner; owner="$(dc port api 8000 2>/dev/null || true)"
+  [ "${owner##*:}" = 18000 ] && echo "ok   port 18000 is owned by project $PROJECT" \
+    || { echo "FAIL port 18000 is not this project's api ($owner)"; fail=1; }
+  [ "$(curl -s -o /dev/null -w '%{http_code}' "$API/ready")" = 200 ] && echo "ok   /ready 200" \
+    || { echo "FAIL /ready is not 200"; fail=1; }
+  [ "$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $(token admin)" "$API/audit?limit=1")" = 200 ] \
+    && echo "ok   admin token accepted" || { echo "FAIL admin token refused"; fail=1; }
+  local here there
+  here="$(cd "$ROOT" && python -c "$HASH_APP")"
+  there="$(dc exec -T api python -c "$HASH_APP")"
+  [ "$here" = "$there" ] && echo "ok   container code matches working tree ($here)" \
+    || { echo "FAIL container code is stale (tree $here, container $there): pa-verify up again"; fail=1; }
+  curl -s -H "Authorization: Bearer $(token admin)" "$API/health/details" \
+    | python -c "import json,sys; r=json.load(sys.stdin); print('     health', r['state'], {c['component']: c['state'] for c in r['components']})"
+  return $fail
+}
+HASH_APP='import hashlib,pathlib
+h=hashlib.sha256()
+for p in sorted(pathlib.Path("app").rglob("*")):
+    if p.is_file() and "__pycache__" not in p.parts:
+        h.update(p.as_posix().encode()); h.update(p.read_bytes().replace(b"\r\n", b"\n"))
+print(h.hexdigest()[:16])'
+
+cmd_get() {
+  # pa-verify get <role> <path> <name>: save status, headers, and body under the evidence dir.
+  [ $# -eq 3 ] || die "usage: pa-verify get <nurse|admin|wrong|none> <path> <name>"
+  local role="$1" path="$2" name="$3" dir; dir="$(evidence)"; local tok; tok="$(token "$role")"
+  local auth=(); [ -n "$tok" ] && auth=(-H "Authorization: Bearer $tok")
+  local status
+  status="$(curl -s -D "$dir/$name.headers" -o "$dir/$name.json" -w '%{http_code}' "${auth[@]}" "$API$path")"
+  echo "GET $path as $role -> $status" | tee "$dir/$name.status"
+  grep -i '^x-request-id' "$dir/$name.headers" | tr -d '\r' || true
+}
+
+cmd_logs() {
+  # pa-verify logs [request_id]: api log lines (all, or one request's) saved as evidence.
+  if [ $# -eq 1 ]; then
+    dc logs api --no-log-prefix | grep "$1" | tee "$(evidence)/log-$1.jsonl"
+  else
+    dc logs --tail 80
+  fi
+}
+
+cmd_json() {
+  # pa-verify json <name> '<python expression over d>': query a saved body (path-free, so it
+  # works with Windows Python under Git Bash).
+  [ $# -eq 2 ] || die "usage: pa-verify json <name> '<expr using d>'"
+  python -c "import json,sys; d=json.load(sys.stdin); r=($2); print(r if isinstance(r,str) else json.dumps(r))"     < "$(evidence)/$1.json"
+}
+
+cmd_agent() { dc --profile agent run --rm agent python -m agent.agent "$@" | tee "$(evidence)/agent-$1.txt"; }
+
+cmd_down() {
+  # Remove this project's containers and audit volume. Keep the model copy unless --purge.
+  # Evidence under .verify/evidence/ is never removed.
+  dc --profile agent --profile eval down --remove-orphans
+  docker volume rm "${PROJECT}_audit-data" >/dev/null 2>&1 || true
+  [ "${1:-}" = "--purge" ] && docker volume rm "${PROJECT}_ollama-data" >/dev/null 2>&1 || true
+  echo "down. evidence kept in $(evidence)"
+}
+
+case "${1:-}" in
+  up) cmd_up ;;
+  doctor) cmd_doctor ;;
+  get) shift; cmd_get "$@" ;;
+  logs) shift; cmd_logs "$@" ;;
+  json) shift; cmd_json "$@" ;;
+  agent) shift; cmd_agent "$@" ;;
+  compose) shift; dc "$@" ;;
+  env) echo "api=$API run=$(run_id) evidence=$(evidence) envfile=$(envfile)" ;;
+  down) shift; cmd_down "$@" ;;
+  *) die "commands: up | doctor | get <role> <path> <name> | json <name> <expr> | logs [request_id] | agent <request_id> [--model m] | compose <args> | env | down [--purge]" ;;
+esac
