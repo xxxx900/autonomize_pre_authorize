@@ -23,6 +23,7 @@ EXPECTED: dict[str, tuple[dict[str, str], str]] = {
 
 
 def main() -> int:
+    """Fetch each supplied request and compare statuses and route with the plan."""
     base = os.environ.get("API_URL", "http://localhost:8000")
     headers = {"Authorization": f"Bearer {os.environ['NURSE_TOKEN']}"}
     failures = 0

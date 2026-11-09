@@ -1,95 +1,16 @@
-import hashlib
+"""The SQLite table that holds the audit chain. Triggers make it append-only."""
+
 import json
 import sqlite3
-from collections.abc import Iterable, Mapping
 from contextlib import closing
 from datetime import UTC, datetime
-from enum import StrEnum
 from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict
+from app.audit.hash_chain import GENESIS_HASH, canonical_context, compute_hash, verify_chain
+from app.domain.audit import AuditContext, AuditEvent, ChainStatus
+from app.domain.enums import AuditAction, Outcome
 
-GENESIS_HASH = "0" * 64
-
-
-class AuditAction(StrEnum):
-    EVIDENCE_READ = "evidence.read"
-    POLICY_READ = "policy.read"
-    AUDIT_READ = "audit.read"
-    MCP_REQUEST = "mcp.request"
-
-
-class Outcome(StrEnum):
-    OK = "ok"
-    UNAUTHENTICATED = "unauthenticated"
-    FORBIDDEN = "forbidden"
-    NOT_FOUND = "not_found"
-    ERROR = "error"
-
-
-class AuditEvent(BaseModel):
-    """One audit row. Carries identity and outcome only, never clinical values."""
-
-    model_config = ConfigDict(frozen=True)
-
-    seq: int
-    ts: datetime
-    actor: str
-    role: str | None
-    action: AuditAction
-    request_id: str
-    resource: str | None
-    outcome: Outcome
-    prev_hash: str
-    hash: str
-
-
-class ChainStatus(BaseModel):
-    model_config = ConfigDict(frozen=True)
-
-    valid: bool
-    checked: int
-    broken_at_seq: int | None = None
-
-
-def compute_hash(row: Mapping[str, object]) -> str:
-    material = [
-        row["seq"],
-        row["ts"],
-        row["actor"],
-        row["role"],
-        str(row["action"]),
-        row["request_id"],
-        row["resource"],
-        str(row["outcome"]),
-        row["prev_hash"],
-    ]
-    return hashlib.sha256(json.dumps(material, separators=(",", ":")).encode()).hexdigest()
-
-
-def _event_hash(event: AuditEvent) -> str:
-    return compute_hash({**event.model_dump(), "ts": event.ts.isoformat()})
-
-
-def verify_chain(events: Iterable[AuditEvent]) -> ChainStatus:
-    prev_hash = GENESIS_HASH
-    expected_seq = 1
-    checked = 0
-    for event in events:
-        intact = (
-            event.seq == expected_seq
-            and event.prev_hash == prev_hash
-            and event.hash == _event_hash(event)
-        )
-        if not intact:
-            return ChainStatus(valid=False, checked=checked, broken_at_seq=event.seq)
-        prev_hash = event.hash
-        expected_seq += 1
-        checked += 1
-    return ChainStatus(valid=True, checked=checked)
-
-
-_SCHEMA = """
+SCHEMA = """
 CREATE TABLE IF NOT EXISTS audit_event (
     seq        INTEGER PRIMARY KEY,
     ts         TEXT NOT NULL,
@@ -107,16 +28,42 @@ BEFORE UPDATE ON audit_event BEGIN SELECT RAISE(ABORT, 'audit log is append-only
 CREATE TRIGGER IF NOT EXISTS audit_event_no_delete
 BEFORE DELETE ON audit_event BEGIN SELECT RAISE(ABORT, 'audit log is append-only'); END;
 """
+CONTEXT_COLUMN = "context"
+
+
+def ensure_context_column(db: sqlite3.Connection) -> None:
+    """Add the context column to a table created before it existed. Safe to run every start."""
+    columns = {row["name"] for row in db.execute("PRAGMA table_info(audit_event)")}
+    if CONTEXT_COLUMN not in columns:
+        db.execute(f"ALTER TABLE audit_event ADD COLUMN {CONTEXT_COLUMN} TEXT")
+
+
+def event_from_row(row: sqlite3.Row) -> AuditEvent:
+    """Build an AuditEvent from a stored row, parsing the context JSON if present."""
+    data = dict(row)
+    raw = data.pop(CONTEXT_COLUMN, None)
+    context = AuditContext.model_validate(json.loads(raw)) if raw else None
+    return AuditEvent(**data, context=context)
 
 
 class AuditLog:
+    """Appends and reads audit rows. Each append runs in its own write transaction."""
+
     def __init__(self, path: Path) -> None:
+        """Create the table, triggers, and context column if they do not exist."""
         self._path = path
         path.parent.mkdir(parents=True, exist_ok=True)
         with closing(self._connect()) as db:
-            db.executescript(_SCHEMA)
+            db.executescript(SCHEMA)
+            ensure_context_column(db)
+
+    @property
+    def path(self) -> Path:
+        """The SQLite file this log writes to."""
+        return self._path
 
     def _connect(self) -> sqlite3.Connection:
+        """Open a connection in autocommit mode so transactions are explicit."""
         db = sqlite3.connect(self._path, isolation_level=None, timeout=10)
         db.row_factory = sqlite3.Row
         return db
@@ -130,7 +77,9 @@ class AuditLog:
         request_id: str,
         resource: str | None,
         outcome: Outcome,
+        context: AuditContext | None = None,
     ) -> AuditEvent:
+        """Write the next row, chained to the last one. BEGIN IMMEDIATE keeps seq gapless."""
         with closing(self._connect()) as db:
             db.execute("BEGIN IMMEDIATE")
             last = db.execute(
@@ -146,21 +95,36 @@ class AuditLog:
                 "resource": resource,
                 "outcome": outcome.value,
                 "prev_hash": last["hash"] if last else GENESIS_HASH,
+                "context": canonical_context(context),
             }
             row["hash"] = compute_hash(row)
             db.execute(
-                "INSERT INTO audit_event VALUES "
+                "INSERT INTO audit_event "
+                "(seq, ts, actor, role, action, request_id, resource, outcome, prev_hash, hash,"
+                " context) VALUES "
                 "(:seq, :ts, :actor, :role, :action, :request_id, :resource, :outcome,"
-                " :prev_hash, :hash)",
+                " :prev_hash, :hash, :context)",
                 row,
             )
             db.execute("COMMIT")
-        return AuditEvent(**row)
+        return AuditEvent(**{**row, "context": context})
 
     def events(self) -> list[AuditEvent]:
+        """Every row, oldest first."""
         with closing(self._connect()) as db:
             rows = db.execute("SELECT * FROM audit_event ORDER BY seq").fetchall()
-        return [AuditEvent(**dict(r)) for r in rows]
+        return [event_from_row(r) for r in rows]
 
     def verify(self) -> ChainStatus:
+        """Check the whole chain."""
         return verify_chain(self.events())
+
+    def writable(self) -> bool:
+        """True when a write transaction can be opened, for the readiness probe."""
+        try:
+            with closing(self._connect()) as db:
+                db.execute("BEGIN IMMEDIATE")
+                db.execute("ROLLBACK")
+        except sqlite3.Error:
+            return False
+        return True

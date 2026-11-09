@@ -3,7 +3,7 @@ import logging
 
 import pytest
 
-from app.logs import JsonFormatter
+from app.ops.logs import JsonFormatter
 from tests.conftest import NURSE, bearer
 
 EXPECTED_ROUTE = {
@@ -80,12 +80,16 @@ def test_unlisted_log_fields_are_dropped():
     assert "hba1c" not in json.loads(JsonFormatter().format(record))
 
 
-def test_worksheet_is_served_without_a_token_and_never_uses_innerhtml(client):
-    response = client.get("/")
+@pytest.mark.parametrize("path", ["/", "/audit/view", "/static/dom.js", "/static/style.css"])
+def test_pages_load_without_a_token_and_never_use_innerhtml(client, path):
+    response = client.get(path)
     assert response.status_code == 200
-    assert response.headers["content-type"].startswith("text/html")
     assert "innerHTML" not in response.text
     assert "http://" not in response.text and "https://" not in response.text
+
+
+def test_json_responses_are_indented_for_people(client):
+    assert client.get("/health").text == '{\n  "status": "ok"\n}'
 
 
 def test_request_form_in_the_extra_directory_is_served(settings, make_client, tmp_path):

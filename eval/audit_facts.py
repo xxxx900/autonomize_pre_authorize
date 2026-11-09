@@ -6,6 +6,7 @@ Run: docker compose -p <project> run --rm --no-deps api python -m eval.audit_fac
 
 import json
 import sys
+from functools import partial
 from pathlib import Path
 
 SYNTHEA = Path(__file__).resolve().parent.parent / "resources" / "synthea"
@@ -15,31 +16,39 @@ HBA1C, EGFR = "4548-4", "33914-3"
 
 
 def codes(concept: dict | None) -> list[dict]:
+    """The codings of a CodeableConcept."""
     return (concept or {}).get("coding", [])
 
 
 def status(resource: dict) -> str:
+    """The first clinicalStatus code of a resource, or an empty string."""
     found = codes(resource.get("clinicalStatus"))
     return found[0].get("code", "") if found else ""
 
 
+def of_kind(resources: list[dict], kind: str) -> list[dict]:
+    """Resources of one FHIR type."""
+    return [r for r in resources if r["resourceType"] == kind]
+
+
+def observations(resources: list[dict], loinc: str) -> list[tuple]:
+    """(date, value, reference) for each Observation with this LOINC code, oldest first."""
+    return sorted(
+        (
+            r.get("effectiveDateTime", "")[:10],
+            (r.get("valueQuantity") or {}).get("value"),
+            f"Observation/{r['id']}",
+        )
+        for r in of_kind(resources, "Observation")
+        if any(c.get("code") == loinc for c in codes(r.get("code")))
+    )
+
+
 def facts(bundle: dict) -> dict:
+    """Every raw fact the hand audit compares against the engine, for one bundle."""
     resources = [e["resource"] for e in bundle["entry"]]
     patient = next(r for r in resources if r["resourceType"] == "Patient")
-
-    def of(kind: str) -> list[dict]:
-        return [r for r in resources if r["resourceType"] == kind]
-
-    def observations(loinc: str) -> list[tuple]:
-        return sorted(
-            (
-                r.get("effectiveDateTime", "")[:10],
-                (r.get("valueQuantity") or {}).get("value"),
-                f"Observation/{r['id']}",
-            )
-            for r in of("Observation")
-            if any(c.get("code") == loinc for c in codes(r.get("code")))
-        )
+    of = partial(of_kind, resources)
 
     return {
         "patient": f"Patient/{patient['id']}",
@@ -58,8 +67,8 @@ def facts(bundle: dict) -> dict:
             for c in codes(r.get("code"))
             if any(w in c.get("display", "").lower() for w in WATCH_CONDITION_WORDS)
         ),
-        "hba1c": observations(HBA1C),
-        "egfr": observations(EGFR)[-3:],
+        "hba1c": observations(resources, HBA1C),
+        "egfr": observations(resources, EGFR)[-3:],
         "metformin_requests": sorted(
             (
                 r.get("authoredOn", "")[:10],
@@ -88,6 +97,7 @@ def facts(bundle: dict) -> dict:
 
 
 def main() -> int:
+    """Print the facts for every Synthea bundle, labelled with its request id."""
     by_patient = {
         json.loads(p.read_text("utf-8"))["member"]["patient_id"]: p.stem
         for p in sorted(REQUESTS.glob("*.json"))

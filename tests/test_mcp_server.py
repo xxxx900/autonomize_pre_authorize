@@ -4,8 +4,8 @@ import pytest
 from starlette.responses import PlainTextResponse
 from starlette.testclient import TestClient
 
-from app.audit import AuditLog
-from app.fhir_client import FhirClient
+from app.audit.store import AuditLog
+from app.clients.fhir_client import FhirClient
 from mcp_server.server import BearerGate, build_server
 from tests.conftest import NURSE, _bundled_resources, bearer, fake_fhir_transport
 
@@ -24,6 +24,7 @@ def call(server, tool, **arguments):
 def test_mcp_packet_equals_endpoint_packet(server, client, request_id):
     _, structured = call(server, "get_evidence_packet", request_id=request_id)
     expected = client.get(f"/requests/{request_id}/evidence", headers=bearer(NURSE)).json()
+    assert structured.pop("trace")["trace_id"] != expected.pop("trace")["trace_id"]
     assert structured == expected
 
 
@@ -50,12 +51,13 @@ def test_calls_are_audited_as_mcp_agent(settings):
     ]
 
 
-def test_gate_refuses_and_audits_requests_without_the_token(tmp_path):
-    async def inner(scope, receive, send):
-        await PlainTextResponse("in")(scope, receive, send)
+async def inner_app(scope, receive, send):
+    await PlainTextResponse("in")(scope, receive, send)
 
+
+def test_gate_refuses_and_audits_requests_without_the_token(tmp_path):
     audit = AuditLog(tmp_path / "audit.db")
-    gated = TestClient(BearerGate(inner, "secret", audit))
+    gated = TestClient(BearerGate(inner_app, "secret", audit))
     assert gated.get("/").status_code == 401
     assert gated.get("/", headers=bearer("wrong")).status_code == 401
     assert gated.get("/", headers=bearer("secret")).text == "in"

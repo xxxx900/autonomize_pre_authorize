@@ -1,3 +1,8 @@
+"""Load every bundle under resources/ into the FHIR server, idempotently.
+
+Runs as the one-shot `loader` service on every compose start.
+"""
+
 import copy
 import json
 import sys
@@ -6,8 +11,8 @@ from pathlib import Path
 
 import httpx
 
+from app.clients.fhir_client import FhirClient
 from app.config import REPO_ROOT, FhirSettings
-from app.fhir_client import FhirClient
 
 URN_PREFIX = "urn:uuid:"
 BUNDLE_DIRS = ("bundles", "synthea")
@@ -24,6 +29,7 @@ COUNTED_TYPES = (
 
 
 def _rewrite_references(node, targets: dict[str, str]):
+    """Copy a JSON tree, replacing each `reference` value found in `targets`."""
     if isinstance(node, dict):
         return {
             key: targets.get(value, value)
@@ -62,6 +68,7 @@ def to_idempotent_bundle(bundle: dict) -> dict:
 
 
 def wait_for_fhir(client: FhirClient, seconds: float = WAIT_SECONDS) -> None:
+    """Poll the FHIR server until it answers, or raise after `seconds`."""
     deadline = time.monotonic() + seconds
     while not client.ping():
         if time.monotonic() > deadline:
@@ -76,6 +83,7 @@ def bundle_paths(resources_dir: Path) -> list[Path]:
 
 
 def load_bundle(client: FhirClient, path: Path) -> int:
+    """POST one bundle as an idempotent transaction and return its entry count."""
     bundle = to_idempotent_bundle(json.loads(path.read_text(encoding="utf-8")))
     response = client.http.post("", json=bundle, timeout=300)
     response.raise_for_status()
@@ -83,6 +91,7 @@ def load_bundle(client: FhirClient, path: Path) -> int:
 
 
 def resource_counts(client: FhirClient) -> dict[str, int]:
+    """Count the resources of each counted type on the server."""
     counts = {}
     for resource_type in COUNTED_TYPES:
         response = client.http.get(
@@ -96,6 +105,7 @@ def resource_counts(client: FhirClient) -> dict[str, int]:
 
 
 def main() -> int:
+    """Wait for FHIR, load every bundle, and print the resulting counts."""
     settings = FhirSettings()
     client = FhirClient(settings)
     wait_for_fhir(client)

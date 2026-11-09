@@ -1,3 +1,8 @@
+"""ReAct agent: an Ollama model that calls the MCP evidence tools for one request.
+
+The tool result is printed verbatim; the model's own narration is labelled as not evidence.
+"""
+
 import argparse
 import asyncio
 import json
@@ -21,6 +26,8 @@ SYSTEM_PROMPT = (
 
 @dataclass(frozen=True)
 class AgentRun:
+    """What one agent run produced: the verbatim tool result, the narration, and the calls."""
+
     request_id: str
     packet_text: str
     narration: str
@@ -28,6 +35,7 @@ class AgentRun:
 
 
 def ollama_tools(mcp_tools) -> list[dict]:
+    """Describe the MCP tools in Ollama's function-calling format."""
     return [
         {
             "type": "function",
@@ -38,6 +46,7 @@ def ollama_tools(mcp_tools) -> list[dict]:
 
 
 def chat(client: httpx.AsyncClient, model: str, messages: list[dict], tools: list[dict]):
+    """Send one chat turn to Ollama with the tools available."""
     return client.post(
         "/api/chat",
         json={"model": model, "messages": messages, "tools": tools, "stream": False},
@@ -45,6 +54,7 @@ def chat(client: httpx.AsyncClient, model: str, messages: list[dict], tools: lis
 
 
 async def run_agent(request_id: str, mcp_url: str, mcp_token: str, ollama_url: str, model: str):
+    """Let the model call tools until it has the packet and answers, up to MAX_STEPS turns."""
     packet_text: str | None = None
     calls: list[str] = []
     narration = ""
@@ -90,6 +100,7 @@ async def run_agent(request_id: str, mcp_url: str, mcp_token: str, ollama_url: s
 
 
 def render(run: AgentRun) -> str:
+    """Print the tool result and the model narration under labels that keep them apart."""
     return (
         f"tool calls: {', '.join(run.tool_calls)}\n"
         f"--- TOOL RESULT, verbatim from {PACKET_TOOL} ---\n"
@@ -100,6 +111,7 @@ def render(run: AgentRun) -> str:
 
 
 def settings_from_env() -> dict[str, str]:
+    """MCP and Ollama connection settings from the environment."""
     return {
         "mcp_url": os.environ.get("MCP_URL", "http://localhost:8001/mcp"),
         "mcp_token": os.environ["MCP_TOKEN"],
@@ -109,9 +121,15 @@ def settings_from_env() -> dict[str, str]:
 
 
 def main() -> None:
+    """Run the agent for the request id given on the command line."""
     parser = argparse.ArgumentParser(description="ReAct agent over the PA evidence MCP tools")
     parser.add_argument("request_id")
-    run = asyncio.run(run_agent(parser.parse_args().request_id, **settings_from_env()))
+    parser.add_argument("--model", help="Ollama tool-calling model; overrides AGENT_MODEL")
+    args = parser.parse_args()
+    settings = settings_from_env()
+    if args.model:
+        settings["model"] = args.model
+    run = asyncio.run(run_agent(args.request_id, **settings))
     sys.stdout.write(render(run) + "\n")
 
 

@@ -9,3 +9,5 @@ eval/results/*.tmp
 todo.md
 .audit/
 resources/synthea/
+.verify/
+resources/FDE_Assignment_v2_Prior_Auth_Evidence_Packet.pdf

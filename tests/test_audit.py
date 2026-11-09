@@ -3,7 +3,9 @@ from contextlib import closing
 
 import pytest
 
-from app.audit import AuditAction, AuditLog, Outcome, compute_hash
+from app.audit.hash_chain import compute_hash
+from app.audit.store import AuditLog
+from app.domain.enums import AuditAction, Outcome
 
 
 @pytest.fixture

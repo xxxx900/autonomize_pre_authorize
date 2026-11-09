@@ -125,7 +125,7 @@
     {
       "request_id": "PA-001",
       "http": 200,
-      "latency_s": 7.49,
+      "latency_s": 8.6,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -157,13 +157,18 @@
       },
       "route": "evidence_complete",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 4,
+        "cited": 4
+      },
       "flagged_documents": 0,
       "mismatches": []
     },
     {
       "request_id": "PA-002",
       "http": 200,
-      "latency_s": 4.1,
+      "latency_s": 4.48,
       "statuses": {
         "C1": "met",
         "C2": "missing",
@@ -195,13 +200,18 @@
       },
       "route": "clinician_review",
       "summary_source": "model",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 4,
+        "cited": 4
+      },
       "flagged_documents": 0,
       "mismatches": []
     },
     {
       "request_id": "PA-003",
       "http": 200,
-      "latency_s": 4.41,
+      "latency_s": 4.75,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -233,13 +243,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 4,
+        "cited": 4
+      },
       "flagged_documents": 0,
       "mismatches": []
     },
     {
       "request_id": "PA-004",
       "http": 200,
-      "latency_s": 4.96,
+      "latency_s": 5.28,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -271,13 +286,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 4,
+        "cited": 4
+      },
       "flagged_documents": 0,
       "mismatches": []
     },
     {
       "request_id": "PA-005",
       "http": 200,
-      "latency_s": 3.81,
+      "latency_s": 4.22,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -311,13 +331,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 5,
+        "cited": 5
+      },
       "flagged_documents": 0,
       "mismatches": []
     },
     {
       "request_id": "PA-006",
       "http": 200,
-      "latency_s": 4.59,
+      "latency_s": 4.93,
       "statuses": {
         "C1": "met",
         "C2": "conflicting",
@@ -349,13 +374,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 5,
+        "cited": 5
+      },
       "flagged_documents": 1,
       "mismatches": []
     },
     {
       "request_id": "PA-007",
       "http": 200,
-      "latency_s": 8.66,
+      "latency_s": 9.56,
       "statuses": {
         "C1": "not_met",
         "C2": "met",
@@ -387,13 +417,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 4,
+        "cited": 4
+      },
       "flagged_documents": 0,
       "mismatches": []
     },
     {
       "request_id": "SYN-001",
       "http": 200,
-      "latency_s": 7.82,
+      "latency_s": 8.75,
       "statuses": {
         "C1": "met",
         "C2": "met",
@@ -423,13 +458,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 70,
+        "cited": 70
+      },
       "flagged_documents": 67,
       "mismatches": []
     },
     {
       "request_id": "SYN-002",
       "http": 200,
-      "latency_s": 7.67,
+      "latency_s": 8.56,
       "statuses": {
         "C1": "met",
         "C2": "conflicting",
@@ -459,13 +499,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 29,
+        "cited": 29
+      },
       "flagged_documents": 26,
       "mismatches": []
     },
     {
       "request_id": "SYN-003",
       "http": 200,
-      "latency_s": 8.02,
+      "latency_s": 9.0,
       "statuses": {
         "C1": "met",
         "C2": "not_met",
@@ -501,13 +546,18 @@
       },
       "route": "clinician_review",
       "summary_source": "model",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 28,
+        "cited": 28
+      },
       "flagged_documents": 20,
       "mismatches": []
     },
     {
       "request_id": "SYN-004",
       "http": 200,
-      "latency_s": 5.29,
+      "latency_s": 5.7,
       "statuses": {
         "C1": "met",
         "C2": "not_met",
@@ -539,13 +589,18 @@
       },
       "route": "clinician_review",
       "summary_source": "model",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 67,
+        "cited": 67
+      },
       "flagged_documents": 63,
       "mismatches": []
     },
     {
       "request_id": "SYN-005",
       "http": 200,
-      "latency_s": 7.44,
+      "latency_s": 8.04,
       "statuses": {
         "C1": "met",
         "C2": "not_met",
@@ -601,13 +656,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 81,
+        "cited": 81
+      },
       "flagged_documents": 53,
       "mismatches": []
     },
     {
       "request_id": "SYN-006",
       "http": 200,
-      "latency_s": 7.19,
+      "latency_s": 7.77,
       "statuses": {
         "C1": "met",
         "C2": "missing",
@@ -637,13 +697,18 @@
       },
       "route": "clinician_review",
       "summary_source": "model",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 56,
+        "cited": 56
+      },
       "flagged_documents": 53,
       "mismatches": []
     },
     {
       "request_id": "SYN-007",
       "http": 200,
-      "latency_s": 7.32,
+      "latency_s": 8.04,
       "statuses": {
         "C1": "met",
         "C2": "missing",
@@ -673,13 +738,18 @@
       },
       "route": "clinician_review",
       "summary_source": "model",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 185,
+        "cited": 185
+      },
       "flagged_documents": 182,
       "mismatches": []
     },
     {
       "request_id": "SYN-008",
       "http": 200,
-      "latency_s": 8.08,
+      "latency_s": 8.97,
       "statuses": {
         "C1": "missing",
         "C2": "conflicting",
@@ -707,13 +777,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 47,
+        "cited": 47
+      },
       "flagged_documents": 45,
       "mismatches": []
     },
     {
       "request_id": "SYN-009",
       "http": 200,
-      "latency_s": 4.66,
+      "latency_s": 5.13,
       "statuses": {
         "C1": "missing",
         "C2": "missing",
@@ -739,13 +814,18 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 18,
+        "cited": 18
+      },
       "flagged_documents": 17,
       "mismatches": []
     },
     {
       "request_id": "SYN-010",
       "http": 200,
-      "latency_s": 4.6,
+      "latency_s": 5.42,
       "statuses": {
         "C1": "missing",
         "C2": "missing",
@@ -771,6 +851,11 @@
       },
       "route": "clinician_review",
       "summary_source": "template",
+      "summary_problems": [],
+      "sources_check": {
+        "resolved": 27,
+        "cited": 27
+      },
       "flagged_documents": 26,
       "mismatches": []
     }

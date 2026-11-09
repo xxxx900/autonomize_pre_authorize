@@ -1,6 +1,6 @@
 import pytest
 
-from app.safety import (
+from app.summary.safety import (
     cited_sources,
     faithfulness_problems,
     forbidden_words,

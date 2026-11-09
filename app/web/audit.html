@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PA Audit Log</title>
+<link rel="stylesheet" href="/static/style.css">
+<style> main { max-width: 1200px; } </style>
+</head>
+<body>
+<main>
+  <h1>Audit log</h1>
+  <p class="sub">Admin only. Reads <code>GET /audit</code>, which verifies the whole hash chain on every call. Click a row for its full context and hashes.</p>
+  <nav class="top">
+    <a href="/">Nurse worksheet</a>
+    <a href="/docs">API reference</a>
+  </nav>
+
+  <form class="bar" id="form">
+    <label>Admin token
+      <input id="token" type="password" autocomplete="off" placeholder="Bearer token">
+    </label>
+    <label>Request id (X-Request-ID)
+      <input id="request_id" placeholder="any">
+    </label>
+    <label>Resource
+      <input id="resource" placeholder="PA-004" style="min-width: 110px">
+    </label>
+    <label>Action
+      <select id="action">
+        <option value="">any</option>
+        <option>evidence.read</option><option>policy.read</option><option>catalog.read</option>
+        <option>audit.read</option><option>health.read</option><option>mcp.request</option>
+        <option>service.start</option>
+      </select>
+    </label>
+    <label>Outcome
+      <select id="outcome">
+        <option value="">any</option>
+        <option>ok</option><option>unauthenticated</option><option>forbidden</option>
+        <option>not_found</option><option>error</option>
+      </select>
+    </label>
+    <button type="submit">Show</button>
+  </form>
+
+  <div id="error" class="error" hidden></div>
+  <div id="chain" class="banner" hidden></div>
+  <div id="out" class="scroll" hidden style="margin-top: 12px"></div>
+</main>
+
+<script type="module">
+"use strict";
+import { el, add, savedToken, saveToken, getJson } from "/static/dom.js";
+
+const FILTERS = ["request_id", "resource", "action", "outcome"];
+const COLUMNS = ["#", "Time (local)", "Actor", "Action", "Resource", "Outcome", "HTTP", "ms",
+  "Member", "Summary", "Request id"];
+const form = document.getElementById("form");
+const tokenInput = document.getElementById("token");
+const out = document.getElementById("out");
+const chainBox = document.getElementById("chain");
+const errorBox = document.getElementById("error");
+
+function fail(message) {
+  out.hidden = true;
+  chainBox.hidden = true;
+  errorBox.textContent = message;
+  errorBox.hidden = false;
+}
+
+function when(ts) {
+  const d = new Date(ts);
+  return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+}
+
+function summaryText(summary) {
+  if (!summary) { return ""; }
+  const who = summary.source === "model" ? summary.model : "template";
+  return summary.fallback ? who + " (" + summary.fallback + ")" : who;
+}
+
+function cells(e) {
+  const c = e.context || {};
+  const outcome = el("td");
+  outcome.appendChild(el("span", e.outcome, "pill " + e.outcome));
+  return [
+    el("td", e.seq), el("td", when(e.ts)), el("td", e.role ? e.actor + " (" + e.role + ")" : e.actor),
+    el("td", e.action), el("td", e.resource || ""), outcome, el("td", c.status_code ?? ""),
+    el("td", c.duration_ms ?? ""), el("td", c.subject || ""), el("td", summaryText(c.summary)),
+    el("td", e.request_id.slice(0, 12), null)
+  ];
+}
+
+/** The hidden row under each event: its context and both hashes, as indented JSON. */
+function detailRow(e) {
+  const row = el("tr", null, "detail");
+  const td = el("td");
+  td.colSpan = COLUMNS.length;
+  td.appendChild(el("pre", JSON.stringify(
+    { request_id: e.request_id, context: e.context, prev_hash: e.prev_hash, hash: e.hash }, null, 2)));
+  row.appendChild(td);
+  row.hidden = true;
+  return row;
+}
+
+function render(report) {
+  chainBox.className = "banner " + (report.chain.valid ? "evidence_complete" : "clinician_review");
+  chainBox.replaceChildren(document.createTextNode(report.chain.valid
+    ? "Hash chain intact over all " + report.chain.checked + " rows."
+    : "Hash chain BROKEN at row " + report.chain.broken_at_seq + "."));
+  chainBox.appendChild(el("small", "Showing " + report.events.length + " matching of " +
+    report.total + " rows, newest first."));
+  const table = el("table", null, "log");
+  table.appendChild(add(el("tr"), ...COLUMNS.map((name) => el("th", name))));
+  for (const e of [...report.events].reverse()) {
+    const row = add(el("tr", null, "row"), ...cells(e));
+    const detail = detailRow(e);
+    row.addEventListener("click", () => { detail.hidden = !detail.hidden; });
+    add(table, row, detail);
+  }
+  out.replaceChildren(table);
+  chainBox.hidden = false;
+  out.hidden = false;
+}
+
+async function show() {
+  errorBox.hidden = true;
+  const token = tokenInput.value.trim();
+  if (!token) { fail("Enter the admin token."); return; }
+  saveToken(token);
+  const params = new URLSearchParams();
+  for (const name of FILTERS) {
+    const value = document.getElementById(name).value.trim();
+    if (value) { params.set(name, value); }
+  }
+  history.replaceState(null, "", params.toString() ? "#" + params.toString() : location.pathname);
+  let result;
+  try { result = await getJson("/audit?" + params.toString(), token); }
+  catch (e) { fail("Could not reach the service."); return; }
+  if (result.ok) { render(result.body); return; }
+  fail("Request failed (" + result.status + "). " +
+    (result.status === 403 ? "The audit log needs the admin token. " : "") +
+    (result.status === 401 ? "Token missing or invalid. " : ""));
+}
+
+const fromHash = new URLSearchParams(location.hash.slice(1));
+for (const name of FILTERS) {
+  if (fromHash.get(name)) { document.getElementById(name).value = fromHash.get(name); }
+}
+tokenInput.value = savedToken();
+form.addEventListener("submit", (ev) => { ev.preventDefault(); show(); });
+if (tokenInput.value) { show(); }
+</script>
+</body>
+</html>

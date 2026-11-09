@@ -1,7 +1,11 @@
+import json
+
 import pytest
 
-from app.auth import Principal, Role, authenticate
 from app.config import Settings
+from app.domain.enums import Role
+from app.domain.principal import Principal
+from app.security.auth import authenticate
 from tests.conftest import ADMIN, NURSE, bearer
 
 NURSE_PRINCIPAL = Principal(actor="nurse", role=Role.NURSE)
@@ -82,7 +86,12 @@ def test_audit_events_carry_no_clinical_fields(client):
         "outcome",
         "prev_hash",
         "hash",
+        "context",
     }
+    row = json.dumps(event)
+    for clinical in ("7.8", "6.4", "HbA1c", "rationale", "SYSTEM NOTE"):
+        assert clinical not in row
+    assert event["context"]["subject"].startswith("Patient/")
 
 
 def test_health_needs_no_token_and_ready_reflects_fhir(make_client):

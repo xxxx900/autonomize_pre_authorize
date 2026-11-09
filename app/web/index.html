@@ -4,80 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PA Evidence Worksheet</title>
-<style>
-  :root {
-    --bg: #f6f7f9; --panel: #ffffff; --ink: #1b2430; --muted: #5b6675; --line: #d8dde5;
-    --met: #1f7a3d; --met-bg: #e4f4ea;
-    --not_met: #a12626; --not_met-bg: #fbe7e7;
-    --missing: #8a5a00; --missing-bg: #fdf0d5;
-    --conflicting: #5b3aa3; --conflicting-bg: #ece6f8;
-    --accent: #1f4f99;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #12161c; --panel: #1b2028; --ink: #e6e9ee; --muted: #9aa5b4; --line: #2e3643;
-      --met: #7fd69a; --met-bg: #183a25;
-      --not_met: #f09a9a; --not_met-bg: #44201f;
-      --missing: #efc46c; --missing-bg: #3f3115;
-      --conflicting: #c4b0f2; --conflicting-bg: #302449;
-      --accent: #8fb4f0;
-    }
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink);
-    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
-  main { max-width: 860px; margin: 0 auto; padding: 20px 16px 48px; }
-  h1 { font-size: 20px; margin: 0 0 4px; }
-  h2 { font-size: 13px; margin: 24px 0 8px; text-transform: uppercase; letter-spacing: .04em;
-    color: var(--muted); }
-  .sub { color: var(--muted); margin: 0 0 16px; }
-  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; background: var(--panel);
-    border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
-  label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 2px; }
-  input, select, button { font: inherit; padding: 6px 8px; border-radius: 6px;
-    border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
-  input { min-width: 220px; }
-  button { background: var(--accent); color: var(--bg); border-color: var(--accent);
-    cursor: pointer; font-weight: 600; }
-  .banner { margin-top: 16px; padding: 14px 16px; border-radius: 8px; font-weight: 600;
-    border: 1px solid var(--line); }
-  .banner.evidence_complete { background: var(--met-bg); color: var(--met); }
-  .banner.clinician_review { background: var(--missing-bg); color: var(--missing); }
-  .banner small { display: block; font-weight: 400; color: var(--muted); }
-  .error { margin-top: 16px; padding: 12px; border-radius: 8px; background: var(--not_met-bg);
-    color: var(--not_met); }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
-    padding: 12px 14px; margin-bottom: 10px; }
-  .head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
-  .cid { font-weight: 700; }
-  .req { flex: 1 1 260px; }
-  .pill { padding: 1px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
-  .pill.met { background: var(--met-bg); color: var(--met); }
-  .pill.not_met { background: var(--not_met-bg); color: var(--not_met); }
-  .pill.missing { background: var(--missing-bg); color: var(--missing); }
-  .pill.conflicting { background: var(--conflicting-bg); color: var(--conflicting); }
-  .why { margin: 6px 0 0; }
-  .src { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
-  code { font: 12px ui-monospace, Consolas, monospace; background: var(--bg);
-    padding: 1px 5px; border-radius: 4px; border: 1px solid var(--line); margin-right: 4px;
-    display: inline-block; word-break: break-all; }
-  table.cmp { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 14px; }
-  .cmp th, .cmp td { text-align: left; padding: 6px 8px; border: 1px solid var(--line);
-    vertical-align: top; }
-  .cmp th { background: var(--conflicting-bg); color: var(--conflicting); font-size: 12px;
-    text-transform: uppercase; letter-spacing: .04em; }
-  ul.plain { margin: 0; padding-left: 20px; }
-  .note { color: var(--muted); font-size: 13px; }
-  .tag { font-size: 12px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px;
-    padding: 1px 6px; }
-  [hidden] { display: none !important; }
-  @media (max-width: 520px) { input { min-width: 0; width: 100%; } .bar label { width: 100%; } }
-</style>
+<link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 <main>
   <h1>PA Evidence Worksheet</h1>
   <p class="sub">Read-only. Reports evidence for a nurse to review. It does not recommend or decide.</p>
+  <nav class="top">
+    <a href="/audit/view">Audit log (admin)</a>
+    <a href="/docs">API reference</a>
+  </nav>
 
   <form class="bar" id="form">
     <label>Access token
@@ -86,6 +22,9 @@
     <label>Request
       <select id="picker"></select>
     </label>
+    <label>Summary model
+      <select id="model"></select>
+    </label>
     <button type="submit">Load packet</button>
   </form>
 
@@ -93,153 +32,227 @@
   <div id="out" hidden></div>
 </main>
 
-<script>
-(function () {
-  "use strict";
-  var IDS = ["PA-001", "PA-002", "PA-003", "PA-004", "PA-005", "PA-006", "PA-007"];
-  var ROUTE_TEXT = {
-    evidence_complete: "Evidence complete: all five criteria are met in the record.",
-    clinician_review: "Clinician review: at least one criterion is not met, missing or conflicting."
-  };
-  var STATUS_TEXT = { met: "met", not_met: "not met", missing: "missing", conflicting: "conflicting" };
-  var tokenInput = document.getElementById("token");
-  var picker = document.getElementById("picker");
-  var out = document.getElementById("out");
-  var errorBox = document.getElementById("error");
+<script type="module">
+"use strict";
+import { el, add, factTable, savedToken, saveToken, getJson } from "/static/dom.js";
 
-  function el(tag, text, cls) {
-    var node = document.createElement(tag);
-    if (text !== undefined && text !== null) { node.textContent = String(text); }
-    if (cls) { node.className = cls; }
-    return node;
+const ROUTE_TEXT = {
+  evidence_complete: "Evidence complete: all five criteria are met in the record.",
+  clinician_review: "Clinician review: at least one criterion is not met, missing or conflicting."
+};
+const STATUS_TEXT = { met: "met", not_met: "not met", missing: "missing", conflicting: "conflicting" };
+const FALLBACK_TEXT = {
+  not_configured: "no model is configured",
+  unreachable: "the model was unreachable",
+  model_error: "the model returned an error",
+  bad_output: "the model output was malformed",
+  rejected: "the model output failed the safety check"
+};
+const ERROR_TEXT = { 401: "Token missing or invalid.", 403: "Role not permitted.",
+  404: "Unknown request or member.", 502: "Upstream FHIR problem." };
+const tokenInput = document.getElementById("token");
+const picker = document.getElementById("picker");
+const modelPicker = document.getElementById("model");
+const out = document.getElementById("out");
+const errorBox = document.getElementById("error");
+
+function ref(source) { return source.resource_type + "/" + source.id; }
+function shown(value) { return value === null || value === undefined ? "(none)" : value; }
+
+/** A reference as a link to the FHIR server when the packet carries one, else as plain code. */
+function refLink(source, url) {
+  const wrap = el("code");
+  if (!url) { wrap.textContent = ref(source); return wrap; }
+  const link = el("a", ref(source), "ref");
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  wrap.appendChild(link);
+  return wrap;
+}
+
+/** One cited FHIR resource: its label, a link to the source, and the fields the rules read. */
+function evidenceBlock(item) {
+  const title = add(el("div", null, "item-title"),
+    document.createTextNode(item.label + " "), refLink(item.ref, item.fhir_url));
+  return add(el("div"), title, factTable(item.facts));
+}
+
+/** The FHIR link the packet holds for a reference, wherever it was cited. */
+function urlFor(packet, source) {
+  for (const c of packet.criteria) {
+    for (const e of c.evidence) { if (ref(e.ref) === ref(source)) { return e.fhir_url; } }
   }
-  function add(parent) {
-    for (var i = 1; i < arguments.length; i++) { parent.appendChild(arguments[i]); }
-    return parent;
+  return null;
+}
+
+function conflictTable(packet, conflicts) {
+  const table = el("table", null, "cmp");
+  table.appendChild(add(el("tr"), el("th", "Request form field"), el("th", "Request form says"),
+    el("th", "FHIR record says"), el("th", "Record source")));
+  for (const c of conflicts) {
+    const src = el("td");
+    if (c.record_source) { src.appendChild(refLink(c.record_source, urlFor(packet, c.record_source))); }
+    else { src.textContent = "(none)"; }
+    table.appendChild(add(el("tr"), el("td", c.field), el("td", shown(c.form_value)),
+      el("td", shown(c.record_value)), src));
   }
-  function ref(source) { return source.resource_type + "/" + source.id; }
-  function shown(value) { return value === null || value === undefined ? "(none)" : value; }
+  return table;
+}
 
-  function sourceLine(label, sources) {
-    var line = el("p", null, "src");
-    line.appendChild(document.createTextNode(label + " "));
-    if (!sources.length) { line.appendChild(document.createTextNode("none")); }
-    sources.forEach(function (s) { line.appendChild(el("code", ref(s))); });
-    return line;
+/** The policy clause and the record data behind one finding, folded so the card stays short. */
+function provenance(packet, c) {
+  const box = el("details", null, "prov");
+  box.appendChild(el("summary", "Where this comes from: policy clause and record data"));
+  box.appendChild(el("div", "Policy " + packet.policy_id + " v" + packet.policy_version + ", " +
+    packet.policy_source.file + ", " + c.policy.section, "prov-head"));
+  box.appendChild(factTable(c.policy.parameters));
+  box.appendChild(el("div", "Member record (" + c.evidence.length + " resources)", "prov-head"));
+  if (!c.evidence.length) { box.appendChild(el("span", "No record resource cited.", "note")); }
+  for (const item of c.evidence) { box.appendChild(evidenceBlock(item)); }
+  return box;
+}
+
+function criterionCard(packet, c) {
+  const card = el("div", null, "card");
+  card.appendChild(add(el("div", null, "head"), el("span", c.id, "cid"),
+    el("span", c.requirement, "req"),
+    el("span", STATUS_TEXT[c.status] || c.status, "pill " + c.status)));
+  card.appendChild(el("p", c.rationale, "why"));
+  if (c.conflicts.length) { card.appendChild(conflictTable(packet, c.conflicts)); }
+  if (c.missing_document) {
+    card.appendChild(el("p", "Ask the provider for: " + c.missing_document, "why"));
   }
+  card.appendChild(provenance(packet, c));
+  return card;
+}
 
-  function conflictTable(conflicts) {
-    var table = el("table", null, "cmp");
-    var head = el("tr");
-    add(head, el("th", "Field"), el("th", "Request form says"), el("th", "FHIR record says"),
-      el("th", "Record source"));
-    add(table, head);
-    conflicts.forEach(function (c) {
-      var row = el("tr");
-      var src = el("td");
-      if (c.record_source) { src.appendChild(el("code", ref(c.record_source))); }
-      else { src.textContent = "(none)"; }
-      add(row, el("td", c.field), el("td", shown(c.form_value)),
-        el("td", shown(c.record_value)), src);
-      add(table, row);
-    });
-    return table;
+function section(title, body) {
+  out.appendChild(el("h2", title));
+  out.appendChild(body);
+}
+
+function missingList(items) {
+  const box = el("div", null, "card");
+  if (!items.length) { box.appendChild(el("span", "None", "note")); return box; }
+  const list = el("ul", null, "plain");
+  for (const d of items) { list.appendChild(el("li", d)); }
+  box.appendChild(list);
+  return box;
+}
+
+function flaggedList(items) {
+  const box = el("div", null, "card");
+  if (!items.length) { box.appendChild(el("span", "None", "note")); return box; }
+  box.appendChild(el("p", "These hold free text the service never reads. Open them in the source system.", "note"));
+  for (const item of items) { box.appendChild(evidenceBlock(item)); }
+  return box;
+}
+
+function summaryCard(p) {
+  const box = el("div", null, "card");
+  if (!p.summary) { box.appendChild(el("span", "No summary for this packet.", "note")); return box; }
+  box.appendChild(el("p", p.summary, "why"));
+  const trace = p.trace ? p.trace.summary : null;
+  let label = "Source: " + (p.summary_source || "not labelled");
+  if (trace && trace.model) { label += ", model " + trace.model; }
+  if (trace && trace.latency_ms !== null) { label += ", " + trace.latency_ms + " ms"; }
+  if (trace && trace.fallback) {
+    label += ". Template used because " + (FALLBACK_TEXT[trace.fallback] || trace.fallback);
   }
+  box.appendChild(el("span", label, "tag"));
+  return box;
+}
 
-  function criterionCard(c) {
-    var card = el("div", null, "card");
-    var head = el("div", null, "head");
-    add(head, el("span", c.id, "cid"), el("span", c.requirement, "req"),
-      el("span", STATUS_TEXT[c.status] || c.status, "pill " + c.status));
-    add(card, head, el("p", c.rationale, "why"), sourceLine("Sources:", c.sources));
-    if (c.conflicts && c.conflicts.length) { card.appendChild(conflictTable(c.conflicts)); }
-    if (c.missing_document) {
-      card.appendChild(el("p", "Ask the provider for: " + c.missing_document, "why"));
-    }
-    return card;
-  }
+function traceCard(p) {
+  const box = el("div", null, "card");
+  const t = p.trace;
+  if (!t) { box.appendChild(el("span", "No trace.", "note")); return box; }
+  box.appendChild(factTable([
+    { field: "Trace id (X-Request-ID and audit request_id)", value: t.trace_id },
+    { field: "Generated at", value: t.generated_at },
+    { field: "Total time", value: t.duration_ms + " ms" },
+    { field: "FHIR read", value: t.fhir_ms + " ms, " + t.fhir_resources_read + " resources" },
+    { field: "Rules", value: t.rules_ms + " ms" },
+    { field: "Cited-source check", value: t.source_check_ms + " ms" },
+    { field: "Summary", value: t.summary.latency_ms === null ? "not called" : t.summary.latency_ms + " ms" },
+    { field: "Policy file SHA-256", value: p.policy_source.sha256 }
+  ]));
+  const link = el("a", "Open the audit event for this packet (admin)", "ref");
+  link.href = "/audit/view#request_id=" + encodeURIComponent(t.trace_id);
+  box.appendChild(link);
+  return box;
+}
 
-  function listSection(title, items, renderItem) {
-    var box = el("div", null, "card");
-    if (!items.length) { box.appendChild(el("span", "None", "note")); }
-    else {
-      var list = el("ul", null, "plain");
-      items.forEach(function (item) { list.appendChild(renderItem(item)); });
-      box.appendChild(list);
-    }
-    out.appendChild(el("h2", title));
-    out.appendChild(box);
-  }
+function render(p) {
+  out.replaceChildren();
+  const banner = el("div", null, "banner " + p.route);
+  banner.appendChild(document.createTextNode(ROUTE_TEXT[p.route] || p.route));
+  banner.appendChild(el("small", p.request_id + " · policy " + p.policy_id + " v" +
+    p.policy_version + " (" + p.policy_source.title + ", effective " + p.policy_source.effective +
+    ") · request date " + p.request_date));
+  out.appendChild(banner);
+  out.appendChild(el("h2", "Criteria"));
+  for (const c of p.criteria) { out.appendChild(criterionCard(p, c)); }
+  section("Missing documents", missingList(p.missing_documents));
+  section("Flagged documents (listed, never rendered)", flaggedList(p.flagged_evidence));
+  section("Summary", summaryCard(p));
+  section("Trace", traceCard(p));
+  out.hidden = false;
+}
 
-  function render(p) {
-    out.replaceChildren();
-    var banner = el("div", null, "banner " + p.route);
-    banner.appendChild(document.createTextNode(ROUTE_TEXT[p.route] || p.route));
-    banner.appendChild(el("small", p.request_id + " · policy " + p.policy_id + " v" +
-      p.policy_version + " · request date " + p.request_date));
-    out.appendChild(banner);
+function fail(message) {
+  out.hidden = true;
+  errorBox.textContent = message;
+  errorBox.hidden = false;
+}
 
-    out.appendChild(el("h2", "Criteria"));
-    p.criteria.forEach(function (c) { out.appendChild(criterionCard(c)); });
+function option(value, label) {
+  const node = el("option", label || value);
+  node.value = value;
+  return node;
+}
 
-    listSection("Missing documents", p.missing_documents, function (d) { return el("li", d); });
-    listSection("Flagged documents (listed, never rendered)", p.flagged_documents, function (s) {
-      var li = el("li");
-      li.appendChild(el("code", ref(s)));
-      li.appendChild(document.createTextNode(" contains free text that was not read or used"));
-      return li;
-    });
+async function load(id) {
+  errorBox.hidden = true;
+  const token = tokenInput.value.trim();
+  if (!token) { fail("Enter an access token."); return; }
+  saveToken(token);
+  if (!picker.options.length) { await fillPickers(token); }
+  const query = modelPicker.value ? "?summary_model=" + encodeURIComponent(modelPicker.value) : "";
+  let result;
+  try { result = await getJson("/requests/" + encodeURIComponent(id) + "/evidence" + query, token); }
+  catch (e) { fail("Could not reach the service."); return; }
+  if (result.ok) { render(result.body); return; }
+  fail("Request failed (" + result.status + "). " + (ERROR_TEXT[result.status] || "") +
+    (result.traceId ? " Trace id " + result.traceId + "." : ""));
+}
 
-    out.appendChild(el("h2", "Summary"));
-    var box = el("div", null, "card");
-    if (p.summary) {
-      box.appendChild(el("p", p.summary, "why"));
-      box.appendChild(el("span", "Source: " + (p.summary_source || "not labelled"), "tag"));
-    } else {
-      box.appendChild(el("span", "No summary for this packet.", "note"));
-    }
-    out.appendChild(box);
-    out.hidden = false;
-  }
+/** Fill the request and model dropdowns from GET /catalog, which needs a token. */
+async function fillPickers(token) {
+  let result;
+  try { result = await getJson("/catalog", token); } catch (e) { return; }
+  if (!result.ok) { return; }
+  const wanted = picker.value || decodeURIComponent((location.hash || "").slice(1));
+  picker.replaceChildren(...result.body.request_ids.map((id) => option(id)));
+  if (result.body.request_ids.includes(wanted)) { picker.value = wanted; }
+  const models = result.body.summary_models;
+  modelPicker.replaceChildren(...models.choices.map((m) =>
+    option(m, m === models.default ? m + " (default)" : m)));
+  modelPicker.value = models.default;
+}
 
-  function fail(message) {
-    out.hidden = true;
-    errorBox.textContent = message;
-    errorBox.hidden = false;
-  }
-
-  function load(id) {
-    errorBox.hidden = true;
-    var token = tokenInput.value.trim();
-    if (!token) { fail("Enter an access token."); return; }
-    try { sessionStorage.setItem("pa_token", token); } catch (e) { /* storage unavailable */ }
-    fetch("/requests/" + encodeURIComponent(id) + "/evidence", {
-      headers: { "Authorization": "Bearer " + token }
-    }).then(function (r) {
-      if (r.ok) { return r.json().then(render); }
-      var reason = { 401: "Token missing or invalid.", 403: "Role not permitted.",
-        404: "Unknown request or member.", 502: "Upstream FHIR problem." }[r.status];
-      fail("Request failed (" + r.status + "). " + (reason || ""));
-    }).catch(function () { fail("Could not reach the service."); });
-  }
-
-  IDS.forEach(function (id) {
-    var o = el("option", id);
-    o.value = id;
-    picker.appendChild(o);
-  });
-  try { tokenInput.value = sessionStorage.getItem("pa_token") || ""; } catch (e) { /* ignore */ }
-  var hashId = decodeURIComponent((location.hash || "").slice(1));
-  if (IDS.indexOf(hashId) >= 0) {
-    picker.value = hashId;
-    if (tokenInput.value) { load(hashId); }
-  }
-  document.getElementById("form").addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    history.replaceState(null, "", "#" + picker.value);
-    load(picker.value);
-  });
-})();
+tokenInput.value = savedToken();
+if (tokenInput.value) {
+  await fillPickers(tokenInput.value);
+  if (picker.value && location.hash) { load(picker.value); }
+}
+tokenInput.addEventListener("change", () => fillPickers(tokenInput.value.trim()));
+document.getElementById("form").addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  history.replaceState(null, "", "#" + picker.value);
+  load(picker.value);
+});
 </script>
 </body>
 </html>

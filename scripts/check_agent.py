@@ -13,6 +13,7 @@ REQUEST_IDS = [f"PA-00{n}" for n in range(1, 8)]
 
 
 def view(packet: dict) -> dict:
+    """The parts of a packet the agent and the API must agree on: statuses and route."""
     return {
         "statuses": {c["id"]: c["status"] for c in packet["criteria"]},
         "route": packet["route"],
@@ -20,6 +21,7 @@ def view(packet: dict) -> dict:
 
 
 async def main() -> int:
+    """Run the agent for each supplied request and compare it with the HTTP endpoint."""
     api = os.environ.get("API_URL", "http://localhost:8000")
     headers = {"Authorization": f"Bearer {os.environ['NURSE_TOKEN']}"}
     failures = 0

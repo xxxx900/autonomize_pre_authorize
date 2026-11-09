@@ -9,12 +9,15 @@ from pathlib import Path
 import httpx
 from pydantic import ValidationError
 
-from app.packet import EvidencePacket
-from app.policy import load_policy
-from app.record import RequestForm, record_from_resources
-from app.rules import evaluate
-from app.safety import faithfulness_problems, forbidden_words
-from app.summary import PROMPT_VERSION, Summarizer, SummaryOutput
+from app.domain.packet import EvidencePacket
+from app.loaders.fhir_record import record_from_resources
+from app.loaders.policy_file import load_policy
+from app.loaders.request_file import parse_request_form
+from app.rules.evaluate import evaluate
+from app.summary.output import SummaryOutput
+from app.summary.prompt import PROMPT_VERSION
+from app.summary.safety import faithfulness_problems, forbidden_words
+from app.summary.summarizer import Summarizer
 
 ROOT = Path(__file__).resolve().parent.parent
 RESOURCES = ROOT / "resources"
@@ -24,17 +27,19 @@ TIMEOUT_SECONDS = 180.0
 
 
 def packets() -> list[EvidencePacket]:
+    """Evaluate the seven supplied requests offline, straight from the bundle files."""
     policy = load_policy(RESOURCES / "policy_MP-SYN-021.json")
     out = []
     for rid in REQUEST_IDS:
         bundle = json.loads((RESOURCES / "bundles" / f"{rid}.json").read_text("utf-8"))
         form = json.loads((RESOURCES / "requests" / f"{rid}.json").read_text("utf-8"))
         record = record_from_resources([e["resource"] for e in bundle["entry"]])
-        out.append(evaluate(record, RequestForm.from_json(form), policy))
+        out.append(evaluate(record, parse_request_form(form), policy))
     return out
 
 
 def one_run(summarizer: Summarizer, packet: EvidencePacket) -> dict:
+    """Ask the model once and score the reply: schema, faithfulness, forbidden words, latency."""
     started = time.perf_counter()
     try:
         raw = summarizer.ask(packet)
@@ -55,6 +60,7 @@ def one_run(summarizer: Summarizer, packet: EvidencePacket) -> dict:
 
 
 def summarize_model(model: str, url: str, runs: int, items: list[EvidencePacket]) -> dict:
+    """Run every packet `runs` times on one model, after one uncounted warm-up call."""
     summarizer = Summarizer(url, model, TIMEOUT_SECONDS)
     one_run(summarizer, items[0])
     results = [
@@ -82,11 +88,13 @@ def summarize_model(model: str, url: str, runs: int, items: list[EvidencePacket]
 
 
 def digest(url: str, model: str) -> str | None:
+    """The first 12 characters of a pulled model's digest, or None if it is not pulled."""
     tags = httpx.get(f"{url}/api/tags", timeout=30).json()["models"]
     return next((t["digest"][:12] for t in tags if t["name"] == model), None)
 
 
 def markdown(report: dict) -> str:
+    """Render the measurement report as a Markdown table."""
     lines = [
         f"Prompt `{report['prompt_version']}`, {report['runs']} runs x {len(REQUEST_IDS)} packets, "
         "temperature 0, CPU, one warm-up call per model not counted.",
@@ -104,6 +112,7 @@ def markdown(report: dict) -> str:
 
 
 def main() -> None:
+    """Measure each model in MEASURE_MODELS and write the JSON and Markdown reports."""
     url = os.environ["OLLAMA_URL"]
     runs = int(os.environ.get("MEASURE_RUNS", "5"))
     stem = os.environ.get("MEASURE_OUTPUT", "models")

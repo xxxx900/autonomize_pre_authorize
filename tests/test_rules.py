@@ -3,10 +3,12 @@ from pathlib import Path
 
 import pytest
 
-from app.packet import EvidencePacket, Route, Status
-from app.policy import load_policy
-from app.record import RequestForm, record_from_resources
-from app.rules import evaluate
+from app.domain.enums import Route, Status
+from app.domain.packet import EvidencePacket
+from app.loaders.fhir_record import record_from_resources
+from app.loaders.policy_file import load_policy
+from app.loaders.request_file import parse_request_form
+from app.rules.evaluate import evaluate
 
 RESOURCES = Path(__file__).resolve().parent.parent / "resources"
 POLICY = load_policy(RESOURCES / "policy_MP-SYN-021.json")
@@ -33,7 +35,7 @@ def packet_for(request_id: str) -> EvidencePacket:
     bundle = json.loads((RESOURCES / "bundles" / f"{request_id}.json").read_text("utf-8"))
     raw_form = json.loads((RESOURCES / "requests" / f"{request_id}.json").read_text("utf-8"))
     record = record_from_resources([e["resource"] for e in bundle["entry"]])
-    return evaluate(record, RequestForm.from_json(raw_form), POLICY)
+    return evaluate(record, parse_request_form(raw_form), POLICY)
 
 
 def criterion(packet: EvidencePacket, cid: str):
@@ -117,7 +119,7 @@ def _packet_with_metformin(request_id: str, prescriptions: list[dict]) -> Eviden
         }
         for i, p in enumerate(prescriptions)
     ]
-    return evaluate(record_from_resources(others + meds), RequestForm.from_json(raw_form), POLICY)
+    return evaluate(record_from_resources(others + meds), parse_request_form(raw_form), POLICY)
 
 
 def test_back_to_back_renewals_count_as_one_continuous_trial():

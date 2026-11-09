@@ -62,6 +62,7 @@ PATIENTS = {
 
 
 def download(url: str, dest: Path) -> str:
+    """Stream a URL to a file and return the SHA-256 of what was written."""
     digest = hashlib.sha256()
     with urllib.request.urlopen(url, timeout=120) as response, dest.open("wb") as out:
         while chunk := response.read(1 << 20):
@@ -71,6 +72,7 @@ def download(url: str, dest: Path) -> str:
 
 
 def main() -> int:
+    """Download the pinned archive, check its hash, and copy the chosen patients."""
     TARGET.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         archive = Path(tmp) / "synthea.zip"
