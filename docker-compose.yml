@@ -1,6 +1,14 @@
+# REGISTRY is empty locally. Set it to "<name>.azurecr.io/" (trailing slash) to name every image for ACR.
+# All app services run one image, built from the runtime target and named pa-evidence.
+x-app: &app
+  build:
+    context: .
+    target: runtime
+  image: ${REGISTRY:-}pa-evidence:${IMAGE_TAG:-dev}
+
 services:
   hapi:
-    image: hapiproject/hapi:v8.12.0-2
+    image: ${REGISTRY:-}hapiproject/hapi:v8.12.0-2
     ports:
       - "${HAPI_HOST_PORT:-8080}:8080"
     environment:
@@ -8,9 +16,7 @@ services:
     restart: unless-stopped
 
   loader:
-    build:
-      context: .
-      target: runtime
+    <<: *app
     command: ["python", "-m", "scripts.load_fhir"]
     environment:
       FHIR_BASE_URL: http://hapi:8080/fhir
@@ -19,7 +25,7 @@ services:
       - hapi
 
   ollama:
-    image: ollama/ollama:0.12.6
+    image: ${REGISTRY:-}ollama/ollama:0.12.6
     ports:
       - "${OLLAMA_HOST_PORT:-11434}:11434"
     volumes:
@@ -32,7 +38,7 @@ services:
     restart: unless-stopped
 
   ollama-pull:
-    image: ollama/ollama:0.12.6
+    image: ${REGISTRY:-}ollama/ollama:0.12.6
     entrypoint: ["sh", "-c", "for m in $$MODELS; do ollama pull $$m || exit 1; done"]
     environment:
       OLLAMA_HOST: http://ollama:11434
@@ -42,9 +48,7 @@ services:
         condition: service_healthy
 
   api:
-    build:
-      context: .
-      target: runtime
+    <<: *app
     ports:
       - "${API_HOST_PORT:-8000}:8000"
     environment:
@@ -82,9 +86,7 @@ services:
     restart: unless-stopped
 
   mcp:
-    build:
-      context: .
-      target: runtime
+    <<: *app
     command: ["python", "-m", "mcp_server.server"]
     ports:
       - "${MCP_HOST_PORT:-8001}:8001"
@@ -122,9 +124,7 @@ services:
 
   agent:
     profiles: ["agent"]
-    build:
-      context: .
-      target: runtime
+    <<: *app
     command: ["python", "-m", "agent.agent"]
     environment:
       MCP_URL: http://mcp:8001/mcp
@@ -136,18 +136,14 @@ services:
 
   fetch-synthea:
     profiles: ["synthea"]
-    build:
-      context: .
-      target: runtime
+    <<: *app
     command: ["python", "-m", "scripts.fetch_synthea"]
     volumes:
       - ./resources/synthea:/srv/resources/synthea
 
   run-eval:
     profiles: ["eval"]
-    build:
-      context: .
-      target: runtime
+    <<: *app
     command: ["python", "-m", "eval.run_eval"]
     environment:
       API_URL: http://api:8000
@@ -161,9 +157,7 @@ services:
 
   measure:
     profiles: ["eval"]
-    build:
-      context: .
-      target: runtime
+    <<: *app
     command: ["python", "-m", "eval.measure_models"]
     environment:
       OLLAMA_URL: http://ollama:11434

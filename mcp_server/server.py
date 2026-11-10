@@ -90,7 +90,6 @@ class EvidenceTools:
             context=context,
         )
 
-    @mcp.tool(name="get_evidence_packet", description="Return the evidence packet for a request id.")
     def get_evidence_packet(self, request_id: str) -> EvidencePacket:
         """Return the evidence packet for a prior-authorization request id such as PA-001."""
         trace_id = uuid.uuid4().hex
@@ -102,7 +101,6 @@ class EvidenceTools:
         self.record(AuditAction.EVIDENCE_READ, request_id, Outcome.OK, trace_id, run.context)
         return run.packet
 
-    @mcp.tool(name="get_policy", description="Return the medical policy the criteria are evaluated against.")
     def get_policy(self) -> Policy:
         """Return the medical policy the criteria are evaluated against."""
         self.record(AuditAction.POLICY_READ, self.policy.policy_id, Outcome.OK, uuid.uuid4().hex)
